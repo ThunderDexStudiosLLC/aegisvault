@@ -6,7 +6,7 @@ import {
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
   Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles, Crown,
   Fingerprint, Key, Lock, ShieldCheck, Bot, BookOpen,
-  Server, CheckCircle, RefreshCw,
+  Server, CheckCircle, RefreshCw, Radar,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -21,6 +21,7 @@ import { useFounder } from "@/contexts/FounderContext";
 import { useIdentity } from "@/contexts/IdentityContext";
 import { useGovernance } from "@/contexts/GovernanceContext";
 import { useContinuity } from "@/contexts/ContinuityContext";
+import { useIronFrame } from "@/contexts/IronFrameContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -38,6 +39,7 @@ export default function VaultDashboard() {
   const identity = useIdentity();
   const governance = useGovernance();
   const continuity = useContinuity();
+  const ironframe = useIronFrame();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -555,6 +557,50 @@ export default function VaultDashboard() {
                     <div className="flex items-center gap-2 rounded-lg p-2">
                       <RefreshCw className="h-3 w-3 text-cyan-400/50 shrink-0" />
                       <span className="text-xs text-foreground/50 flex-1">{cStats.testedProcedures}/{cStats.recoveryProcedures} procedures tested</span>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+
+          {/* IronFrame Security */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Radar className="h-4 w-4 text-red-400/70" />
+                IronFrame
+              </h3>
+              <Link href="/security" className="text-xs text-red-400/60 hover:text-red-400 transition-colors">Open</Link>
+            </div>
+            {(() => {
+              const ifStats = ironframe.getStats();
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className={cn("text-lg font-bold", ifStats.overallScore >= 80 ? "text-success" : ifStats.overallScore >= 60 ? "text-warning" : "text-destructive")}>{ifStats.overallScore}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">SCORE</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-destructive">{ifStats.activeRisks}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">RISKS</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-purple-400">{ifStats.blockedAiActions}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">BLOCKED</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    {ifStats.unacknowledgedThreats > 0 && (
+                      <div className="flex items-center gap-2 rounded-lg p-2 bg-warning/[0.03]">
+                        <AlertTriangle className="h-3 w-3 text-warning/50 shrink-0" />
+                        <span className="text-xs text-warning/70 flex-1">{ifStats.unacknowledgedThreats} unacknowledged threat{ifStats.unacknowledgedThreats > 1 ? 's' : ''}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 rounded-lg p-2">
+                      <Activity className="h-3 w-3 text-warning/50 shrink-0" />
+                      <span className="text-xs text-foreground/50 flex-1">{ifStats.anomaliesDetected} anomalies detected</span>
                     </div>
                   </div>
                 </>

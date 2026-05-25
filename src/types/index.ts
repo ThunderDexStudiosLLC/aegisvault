@@ -823,3 +823,106 @@ export interface ContinuityStats {
   singlePointsOfFailure: number;
   overallReadiness: number;
 }
+
+/* ================================================================
+   IRONFRAME SECURITY INTELLIGENCE
+   ================================================================ */
+
+export type RiskSeverity = "info" | "low" | "medium" | "high" | "critical";
+export type RiskCategory = "credential" | "access" | "infrastructure" | "ai-governance" | "insider" | "compliance" | "network";
+
+export interface SecurityRisk {
+  id: string;
+  title: string;
+  description: string;
+  category: RiskCategory;
+  severity: RiskSeverity;
+  status: "active" | "mitigated" | "accepted" | "investigating";
+  detectedAt: string;
+  affectedEntities: string[];
+  recommendation: string;
+  mitigatedAt?: string;
+}
+
+export interface SecurityAnomaly {
+  id: string;
+  title: string;
+  description: string;
+  category: RiskCategory;
+  severity: RiskSeverity;
+  detectedAt: string;
+  actor: string;
+  actorType: "human" | "ai-agent" | "system" | "unknown";
+  sourceIp?: string;
+  location?: string;
+  resolved: boolean;
+}
+
+export interface IdentityRisk {
+  id: string;
+  identityName: string;
+  riskType: "weak-credential" | "stale-access" | "excessive-permissions" | "shared-account" | "unusual-behavior" | "no-mfa" | "dormant-account";
+  severity: RiskSeverity;
+  description: string;
+  detectedAt: string;
+  recommendation: string;
+}
+
+export interface PermissionDrift {
+  id: string;
+  identity: string;
+  role: string;
+  driftType: "privilege-escalation" | "unused-permissions" | "role-creep" | "orphaned-access" | "cross-boundary";
+  description: string;
+  permissionsAffected: string[];
+  detectedAt: string;
+  severity: RiskSeverity;
+}
+
+export interface AiGovernanceEvent {
+  id: string;
+  agentName: string;
+  action: string;
+  category: "memory-access" | "permission-usage" | "restricted-recall" | "unauthorized-pattern" | "scope-violation" | "data-exfiltration-check";
+  severity: RiskSeverity;
+  timestamp: string;
+  details: string;
+  blocked: boolean;
+  policyRef?: string;
+}
+
+export interface ThreatIntelItem {
+  id: string;
+  title: string;
+  source: string;
+  category: "advisory" | "provider-incident" | "infrastructure-alert" | "ecosystem-risk" | "vulnerability" | "breach-report";
+  severity: RiskSeverity;
+  publishedAt: string;
+  summary: string;
+  affectedSystems: string[];
+  actionRequired: boolean;
+  acknowledged: boolean;
+}
+
+export interface SecurityGraphNode {
+  id: string;
+  label: string;
+  type: "system" | "user" | "permission" | "dependency" | "trust";
+  status: "secure" | "warning" | "critical";
+  x: number;
+  y: number;
+  connections: string[];
+}
+
+export interface IronFrameStats {
+  overallScore: number;
+  activeRisks: number;
+  criticalRisks: number;
+  anomaliesDetected: number;
+  identityRisks: number;
+  permissionDrifts: number;
+  aiGovernanceEvents: number;
+  blockedAiActions: number;
+  threatIntelItems: number;
+  unacknowledgedThreats: number;
+}

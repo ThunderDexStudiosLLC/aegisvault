@@ -10,6 +10,7 @@ import { FounderProvider } from "@/contexts/FounderContext";
 import { IdentityProvider } from "@/contexts/IdentityContext";
 import { GovernanceProvider } from "@/contexts/GovernanceContext";
 import { ContinuityProvider } from "@/contexts/ContinuityContext";
+import { IronFrameProvider } from "@/contexts/IronFrameContext";
 
 export default function DashboardLayout({
   children,
@@ -24,6 +25,7 @@ export default function DashboardLayout({
             <IdentityProvider>
               <GovernanceProvider>
                 <ContinuityProvider>
+                  <IronFrameProvider>
             <div className="flex min-h-screen relative">
               <AmbientEffects />
               <Sidebar />
@@ -32,6 +34,7 @@ export default function DashboardLayout({
                 <main className="flex-1 p-6 aegis-page-enter">{children}</main>
               </div>
             </div>
+                  </IronFrameProvider>
                 </ContinuityProvider>
               </GovernanceProvider>
             </IdentityProvider>
