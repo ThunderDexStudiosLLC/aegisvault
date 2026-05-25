@@ -723,3 +723,103 @@ export interface GovernanceStats {
   founderZones: number;
   complianceScore: number;
 }
+
+/* ================================================================
+   EXECUTIVE CONTINUITY & OPERATIONAL RECOVERY
+   ================================================================ */
+
+export type CriticalAssetCategory = "domain" | "cloud" | "developer" | "payment" | "telecom" | "ai-infra" | "legal" | "credential" | "data-store";
+
+export interface CriticalAsset {
+  id: string;
+  name: string;
+  category: CriticalAssetCategory;
+  provider: string;
+  description: string;
+  owner: string;
+  backupOwner?: string;
+  status: "operational" | "degraded" | "down" | "unknown";
+  criticality: "low" | "medium" | "high" | "critical";
+  lastVerified: string;
+  renewalDate?: string;
+  dependencies: string[];
+  linkedProductIds: string[];
+  recoveryProcedureId?: string;
+  notes?: string;
+}
+
+export interface RecoveryProcedure {
+  id: string;
+  title: string;
+  category: "access-restoration" | "data-recovery" | "infrastructure" | "escalation" | "security-incident" | "business-continuity";
+  priority: "low" | "medium" | "high" | "critical";
+  estimatedTime: string;
+  steps: RecoveryStep[];
+  contactChain: string[];
+  lastTested?: string;
+  lastUpdated: string;
+  linkedAssetIds: string[];
+}
+
+export interface RecoveryStep {
+  order: number;
+  action: string;
+  responsible: string;
+  estimatedMinutes: number;
+  requiresApproval: boolean;
+  notes?: string;
+}
+
+export interface ContinuityIncident {
+  id: string;
+  title: string;
+  severity: "low" | "medium" | "high" | "critical";
+  status: "active" | "investigating" | "mitigated" | "resolved" | "post-mortem";
+  reportedAt: string;
+  resolvedAt?: string;
+  description: string;
+  affectedAssets: string[];
+  affectedProducts: string[];
+  recoveryProcedureId?: string;
+  tasks: IncidentTask[];
+  timeline: IncidentEvent[];
+}
+
+export interface IncidentTask {
+  id: string;
+  action: string;
+  assignee: string;
+  status: "pending" | "in-progress" | "completed" | "blocked";
+  priority: "low" | "medium" | "high" | "critical";
+}
+
+export interface IncidentEvent {
+  timestamp: string;
+  actor: string;
+  action: string;
+}
+
+export interface InfraNode {
+  id: string;
+  label: string;
+  category: CriticalAssetCategory;
+  status: "operational" | "degraded" | "down";
+  criticality: "low" | "medium" | "high" | "critical";
+  x: number;
+  y: number;
+  dependencies: string[];
+  singlePointOfFailure: boolean;
+}
+
+export interface ContinuityStats {
+  totalAssets: number;
+  operationalAssets: number;
+  degradedAssets: number;
+  criticalAssets: number;
+  recoveryProcedures: number;
+  testedProcedures: number;
+  activeIncidents: number;
+  resolvedIncidents: number;
+  singlePointsOfFailure: number;
+  overallReadiness: number;
+}

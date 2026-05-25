@@ -6,6 +6,7 @@ import {
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
   Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles, Crown,
   Fingerprint, Key, Lock, ShieldCheck, Bot, BookOpen,
+  Server, CheckCircle, RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -19,6 +20,7 @@ import { useEcosystem } from "@/contexts/EcosystemContext";
 import { useFounder } from "@/contexts/FounderContext";
 import { useIdentity } from "@/contexts/IdentityContext";
 import { useGovernance } from "@/contexts/GovernanceContext";
+import { useContinuity } from "@/contexts/ContinuityContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -35,6 +37,7 @@ export default function VaultDashboard() {
   const founder = useFounder();
   const identity = useIdentity();
   const governance = useGovernance();
+  const continuity = useContinuity();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -502,6 +505,56 @@ export default function VaultDashboard() {
                     <div className="flex items-center gap-2 rounded-lg p-2">
                       <BookOpen className="h-3 w-3 text-electric/50 shrink-0" />
                       <span className="text-xs text-foreground/50 flex-1">{gStats.founderZones} protection zones active</span>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+
+          {/* Executive Continuity */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Server className="h-4 w-4 text-orange-400/70" />
+                Continuity
+              </h3>
+              <Link href="/continuity" className="text-xs text-orange-400/60 hover:text-orange-400 transition-colors">Open</Link>
+            </div>
+            {(() => {
+              const cStats = continuity.getStats();
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-foreground">{cStats.totalAssets}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">ASSETS</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-success">{cStats.operationalAssets}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">ONLINE</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className={cn("text-lg font-bold", cStats.overallReadiness >= 80 ? "text-success" : "text-warning")}>{cStats.overallReadiness}%</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">READY</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    {cStats.activeIncidents > 0 && (
+                      <div className="flex items-center gap-2 rounded-lg p-2 bg-destructive/[0.03]">
+                        <AlertTriangle className="h-3 w-3 text-destructive/50 shrink-0" />
+                        <span className="text-xs text-destructive/70 flex-1">{cStats.activeIncidents} active incident{cStats.activeIncidents > 1 ? 's' : ''}</span>
+                      </div>
+                    )}
+                    {cStats.singlePointsOfFailure > 0 && (
+                      <div className="flex items-center gap-2 rounded-lg p-2 bg-warning/[0.03]">
+                        <AlertTriangle className="h-3 w-3 text-warning/50 shrink-0" />
+                        <span className="text-xs text-warning/70 flex-1">{cStats.singlePointsOfFailure} single point{cStats.singlePointsOfFailure > 1 ? 's' : ''} of failure</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 rounded-lg p-2">
+                      <RefreshCw className="h-3 w-3 text-cyan-400/50 shrink-0" />
+                      <span className="text-xs text-foreground/50 flex-1">{cStats.testedProcedures}/{cStats.recoveryProcedures} procedures tested</span>
                     </div>
                   </div>
                 </>
