@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar, Clock, Users, Lightbulb, CheckCircle,
   Circle, AlertCircle, Tag, FileText,
 } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { meetings } from "@/data/demo";
+import { useFeedback } from "@/components/global/OperationalFeedback";
+import { useOrb } from "@/contexts/OrbContext";
 
 const taskStatusIcons: Record<string, React.ElementType> = {
   completed: CheckCircle,
@@ -23,6 +25,10 @@ const taskStatusColors: Record<string, string> = {
 export default function MeetingsPage() {
   const [selectedId, setSelectedId] = useState(meetings[0]?.id || "");
   const selected = meetings.find((m) => m.id === selectedId);
+  const { show } = useFeedback();
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("research"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   return (
     <div className="aegis-page-enter space-y-6">
@@ -31,7 +37,7 @@ export default function MeetingsPage() {
           <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Meeting Intelligence</h1>
           <p className="text-sm text-muted-foreground/70">AI-powered meeting summaries, decisions, and follow-ups</p>
         </div>
-        <button className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
+        <button onClick={() => show("success", "Meeting logger opened", "Ready to capture meeting intelligence")} className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
           <Calendar className="h-4 w-4" />
           Log Meeting
         </button>

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Settings, User, Shield, Bell, Palette, Database,
   Key, Globe, Lock, Save, Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { currentUser, organization } from "@/data/demo";
+import { useFeedback } from "@/components/global/OperationalFeedback";
+import { useOrb } from "@/contexts/OrbContext";
 
 const tabs = [
   { key: "profile", label: "Profile", icon: User },
@@ -20,9 +22,14 @@ const tabs = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [saved, setSaved] = useState(false);
+  const { show } = useFeedback();
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("processing"); const t = setTimeout(() => setState("idle"), 2000); return () => clearTimeout(t); }, [setState]);
 
   const handleSave = () => {
     setSaved(true);
+    show("success", "Settings saved", "Configuration updated successfully");
     setTimeout(() => setSaved(false), 2000);
   };
 
@@ -105,7 +112,7 @@ export default function SettingsPage() {
                     <p className="text-sm font-medium text-foreground">Two-Factor Authentication</p>
                     <p className="text-xs text-muted-foreground">Add an extra layer of security to your account</p>
                   </div>
-                  <button className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">Enable</button>
+                  <button onClick={() => show("success", "2FA enabled", "Two-factor authentication activated")} className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">Enable</button>
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-border/20 p-4">
                   <div>
@@ -122,14 +129,14 @@ export default function SettingsPage() {
                     <p className="text-sm font-medium text-foreground">Zero-Knowledge Mode</p>
                     <p className="text-xs text-muted-foreground">Enable ZK proofs for top-secret classified documents</p>
                   </div>
-                  <button className="rounded-lg border border-electric px-4 py-2 text-xs font-medium text-electric hover:bg-electric/10">Configure</button>
+                  <button onClick={() => show("processing", "Configuring ZK mode...", "Zero-knowledge proof initialization")} className="rounded-lg border border-electric px-4 py-2 text-xs font-medium text-electric hover:bg-electric/10">Configure</button>
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-border/20 p-4">
                   <div>
                     <p className="text-sm font-medium text-foreground">Change Password</p>
                     <p className="text-xs text-muted-foreground">Update your vault passphrase</p>
                   </div>
-                  <button className="rounded-lg border border-border px-4 py-2 text-xs text-muted-foreground hover:text-foreground">Update</button>
+                  <button onClick={() => show("success", "Password updated", "Vault passphrase changed successfully")} className="rounded-lg border border-border px-4 py-2 text-xs text-muted-foreground hover:text-foreground">Update</button>
                 </div>
               </div>
             </div>
@@ -188,11 +195,11 @@ export default function SettingsPage() {
                       <p className="text-sm font-medium text-foreground">Vault API Key</p>
                       <p className="text-xs text-muted-foreground">For programmatic access to your vault</p>
                     </div>
-                    <button className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">Generate</button>
+                    <button onClick={() => show("success", "API key generated", "New key available — copy it now")} className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">Generate</button>
                   </div>
                   <div className="mt-3 flex items-center gap-2 rounded-lg bg-secondary p-2">
                     <code className="flex-1 text-xs text-muted-foreground font-mono">av_sk_****************************</code>
-                    <button className="text-xs text-electric hover:text-electric-glow">Copy</button>
+                    <button onClick={() => show("success", "Copied to clipboard")} className="text-xs text-electric hover:text-electric-glow">Copy</button>
                   </div>
                 </div>
                 <div className="rounded-lg border border-border/20 p-4">
@@ -231,14 +238,14 @@ export default function SettingsPage() {
                     <p className="text-sm font-medium text-foreground">Export Vault Data</p>
                     <p className="text-xs text-muted-foreground">Download all your data in JSON format</p>
                   </div>
-                  <button className="rounded-lg border border-border px-4 py-2 text-xs text-muted-foreground hover:text-foreground">Export</button>
+                  <button onClick={() => { show("processing", "Exporting vault data..."); setTimeout(() => show("success", "Export ready", "JSON archive prepared"), 2000); }} className="rounded-lg border border-border px-4 py-2 text-xs text-muted-foreground hover:text-foreground">Export</button>
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-border/20 p-4">
                   <div>
                     <p className="text-sm font-medium text-foreground">Clear Vector Cache</p>
                     <p className="text-xs text-muted-foreground">Rebuild AI search index from scratch</p>
                   </div>
-                  <button className="rounded-lg border border-destructive/30 px-4 py-2 text-xs text-destructive hover:bg-destructive/10">Clear</button>
+                  <button onClick={() => { show("warning", "Clearing vector cache..."); setTimeout(() => show("success", "Cache cleared", "AI search index will rebuild"), 2000); }} className="rounded-lg border border-destructive/30 px-4 py-2 text-xs text-destructive hover:bg-destructive/10">Clear</button>
                 </div>
               </div>
             </div>

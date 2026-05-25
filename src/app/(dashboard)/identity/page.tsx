@@ -11,6 +11,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useIdentity } from "@/contexts/IdentityContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type {
   IdentityProfile, AccessRole, StoredCredential, AccessEvent,
   EmergencyContact, CredentialType,
@@ -43,6 +44,13 @@ type ViewMode = "dashboard" | "roles" | "credentials" | "monitoring" | "emergenc
 export default function IdentityPage() {
   const engine = useIdentity();
   const { setState } = useOrb();
+  const { show } = useFeedback();
+
+  const runIdAction = (label: string) => {
+    setState("processing");
+    show("processing", `${label}...`, "Identity operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Audit log entry created"); setState("idle"); }, 2000);
+  };
   const [view, setView] = useState<ViewMode>("dashboard");
   const [expandedProfile, setExpandedProfile] = useState<string | null>(null);
   const [expandedRole, setExpandedRole] = useState<string | null>(null);
@@ -521,7 +529,7 @@ export default function IdentityPage() {
             ].map((action) => {
               const Icon = action.icon;
               return (
-                <button key={action.label} className="aegis-card rounded-xl p-4 text-left hover:bg-white/[0.02] transition-colors group">
+                <button key={action.label} onClick={() => runIdAction(action.label)} className="aegis-card rounded-xl p-4 text-left hover:bg-white/[0.02] transition-colors group">
                   <Icon className={cn("h-5 w-5 mb-2", action.color)} />
                   <p className="text-sm font-semibold text-foreground/90 group-hover:text-foreground">{action.label}</p>
                   <p className="text-[10px] text-muted-foreground/40">{action.desc}</p>

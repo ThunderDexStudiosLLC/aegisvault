@@ -724,3 +724,95 @@ body::after {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* ================================================================
+   OPERATIONAL FEEDBACK
+   ================================================================ */
+
+@keyframes aegis-pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 0.6; }
+}
+
+@keyframes aegis-status-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.aegis-loading-bar {
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent);
+  animation: aegis-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes aegis-loading {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.aegis-status-live {
+  animation: aegis-status-blink 2s ease-in-out infinite;
+}
+
+.aegis-action-success {
+  animation: aegis-action-pop 0.3s ease-out;
+}
+
+@keyframes aegis-action-pop {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.aegis-risk-pulse {
+  animation: aegis-pulse-ring 2s ease-in-out infinite;
+}
+
+/* ================================================================
+   SKELETON LOADING
+   ================================================================ */
+
+@keyframes aegis-skeleton {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.aegis-skeleton {
+  background: linear-gradient(90deg, rgba(59,130,246,0.04) 25%, rgba(59,130,246,0.08) 50%, rgba(59,130,246,0.04) 75%);
+  background-size: 200% 100%;
+  animation: aegis-skeleton 2s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ================================================================
+   BUTTON CONSISTENCY
+   ================================================================ */
+
+.aegis-btn-primary {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aegis-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px rgba(59,130,246,0.3);
+}
+
+.aegis-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Quick action button polish */
+.aegis-quick-action {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aegis-quick-action:hover {
+  border-color: rgba(59,130,246,0.2);
+  background: rgba(59,130,246,0.04);
+  transform: translateY(-1px);
+}
+
+.aegis-quick-action:active {
+  transform: translateY(0);
+}

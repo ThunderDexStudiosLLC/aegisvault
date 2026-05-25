@@ -5,6 +5,7 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { aiSummaries } from "@/data/demo";
 import { useState, useEffect } from "react";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 
 const typeConfig: Record<string, { icon: React.ElementType; label: string; color: string }> = {
   executive: { icon: Briefcase, label: "Executive Briefing", color: "text-electric" },
@@ -19,6 +20,7 @@ export default function SummariesPage() {
   const [selectedId, setSelectedId] = useState(aiSummaries[0]?.id || "");
   const selected = aiSummaries.find((s) => s.id === selectedId);
   const { setState } = useOrb();
+  const { show } = useFeedback();
 
   useEffect(() => {
     setState("generating-summaries");
@@ -33,7 +35,7 @@ export default function SummariesPage() {
           <h1 className="text-2xl font-bold text-foreground aegis-glow-text">AI Summaries</h1>
           <p className="text-sm text-muted-foreground/70">AI-generated intelligence briefings across all vault data</p>
         </div>
-        <button className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
+        <button onClick={() => { setState("generating-summaries"); show("processing", "Generating AI summary...", "Analyzing vault data across all sources"); setTimeout(() => { show("success", "Summary generated", "New executive briefing ready"); setState("idle"); }, 3000); }} className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
           <RefreshCw className="h-4 w-4" />
           Generate New Summary
         </button>

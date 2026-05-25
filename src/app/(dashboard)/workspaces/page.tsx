@@ -11,6 +11,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { WorkspaceType, WorkspaceSecurityState } from "@/types";
 
 type ViewMode = "dashboard" | "roles" | "agents" | "collaboration" | "graph";
@@ -50,7 +51,14 @@ export default function WorkspacesPage() {
   const [expandedCollab, setExpandedCollab] = useState<string | null>(null);
   const { setState } = useOrb();
   const ws = useWorkspace();
+  const { show } = useFeedback();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const runWsAction = (label: string) => {
+    setState("processing");
+    show("processing", `${label}...`, "Workspace operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Governance log updated"); setState("synchronization"); }, 2000);
+  };
 
   useEffect(() => { setState("synchronization"); return () => setState("idle"); }, [setState]);
 
@@ -234,7 +242,7 @@ export default function WorkspacesPage() {
               ].map((action) => {
                 const Icon = action.icon;
                 return (
-                  <button key={action.label} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
+                  <button key={action.label} onClick={() => runWsAction(action.label)} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
                     <Icon className="h-3 w-3" />
                     {action.label}
                   </button>

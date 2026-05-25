@@ -12,6 +12,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useConsole } from "@/contexts/ConsoleContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 
 type ViewMode = "status" | "command" | "modules" | "ai" | "graph";
 
@@ -56,7 +57,28 @@ export default function ConsolePage() {
   const [executedCmd, setExecutedCmd] = useState<string | null>(null);
   const con = useConsole();
   const { setState } = useOrb();
+  const { show } = useFeedback();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const executeCommand = (cmdId: string, label: string, severity: string) => {
+    if (severity === "critical") {
+      setExecutedCmd(executedCmd === cmdId ? null : cmdId);
+      if (executedCmd !== cmdId) {
+        setState("alert");
+        show("warning", `${label} requires confirmation`, "Founder-level authorization needed");
+        setTimeout(() => setState("high-orchestration"), 2000);
+      }
+    } else {
+      setExecutedCmd(cmdId);
+      setState("processing");
+      show("processing", `Executing: ${label}`, "Command queued for execution");
+      setTimeout(() => {
+        show("success", `${label} completed`, "Operational log entry created");
+        setState("high-orchestration");
+        setExecutedCmd(null);
+      }, 2000);
+    }
+  };
 
   useEffect(() => { setState("high-orchestration"); return () => setState("idle"); }, [setState]);
 
@@ -336,7 +358,7 @@ export default function ConsolePage() {
             <p className="text-[10px] font-mono uppercase tracking-wider text-destructive/50 mb-3">Critical Operations</p>
             <div className="grid grid-cols-3 gap-3">
               {con.getCriticalCommands().map((cmd) => (
-                <button key={cmd.id} onClick={() => setExecutedCmd(executedCmd === cmd.id ? null : cmd.id)}
+                <button key={cmd.id} onClick={() => executeCommand(cmd.id, cmd.label, cmd.severity)}
                   className={cn("flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
                     executedCmd === cmd.id ? "border-destructive/20 bg-destructive/[0.04]" : "border-destructive/5 bg-white/[0.01] hover:bg-destructive/[0.02] hover:border-destructive/10"
                   )}>
@@ -360,7 +382,7 @@ export default function ConsolePage() {
             <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground/30 mb-3">All Commands</p>
             <div className="grid grid-cols-2 gap-2">
               {con.commands.filter((c) => c.severity !== "critical").map((cmd) => (
-                <button key={cmd.id} onClick={() => setExecutedCmd(executedCmd === cmd.id ? null : cmd.id)}
+                <button key={cmd.id} onClick={() => executeCommand(cmd.id, cmd.label, cmd.severity)}
                   className={cn("flex items-start gap-3 rounded-xl border p-3 text-left transition-all",
                     executedCmd === cmd.id ? "border-electric/15 bg-electric/[0.04]" : "border-border/10 bg-white/[0.01] hover:bg-white/[0.02]"
                   )}>
@@ -455,8 +477,8 @@ export default function ConsolePage() {
                         <div><span className="text-muted-foreground/30">Last Check:</span> <span className="text-foreground/60">{formatRelativeTime(mod.lastChecked)}</span></div>
                       </div>
                       <div className="flex gap-1.5">
-                        <button className="rounded-lg border border-border/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-foreground/50 hover:bg-electric/[0.04] hover:text-electric transition-all">View Details</button>
-                        <button className="rounded-lg border border-border/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-foreground/50 hover:bg-electric/[0.04] hover:text-electric transition-all">Run Audit</button>
+                        <button onClick={() => { show("processing", `Loading ${mod.name} details`); setTimeout(() => show("success", `${mod.name} — ${mod.score}% health`, mod.description), 1500); }} className="rounded-lg border border-border/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-foreground/50 hover:bg-electric/[0.04] hover:text-electric transition-all">View Details</button>
+                        <button onClick={() => { setState("searching"); show("processing", `Auditing ${mod.name}...`); setTimeout(() => { show("success", `${mod.name} audit complete`, `Score: ${mod.score}% — ${mod.activeAlerts} active alerts`); setState("high-orchestration"); }, 2500); }} className="rounded-lg border border-border/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-foreground/50 hover:bg-electric/[0.04] hover:text-electric transition-all">Run Audit</button>
                       </div>
                     </div>
                   )}

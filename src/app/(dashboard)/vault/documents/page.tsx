@@ -8,6 +8,7 @@ import {
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { documents, tags } from "@/data/demo";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { VaultDocument } from "@/types";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -28,6 +29,7 @@ const classificationColors: Record<string, string> = {
 };
 
 export default function DocumentsPage() {
+  const { show } = useFeedback();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterClassification, setFilterClassification] = useState<string>("all");
@@ -77,7 +79,7 @@ export default function DocumentsPage() {
                 <option>Top Secret</option>
                 <option>Public</option>
               </select>
-              <button className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">
+              <button onClick={() => show("processing", "Opening secure file browser...")} className="rounded-lg bg-electric px-4 py-2 text-xs font-medium text-white hover:bg-electric-glow">
                 Browse Files
               </button>
             </div>
@@ -157,10 +159,10 @@ export default function DocumentsPage() {
                   <span>{formatRelativeTime(doc.updatedAt)}</span>
                 </div>
                 <div className="mt-3 flex gap-2">
-                  <button className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border py-1.5 text-[10px] text-muted-foreground hover:border-electric-dim hover:text-foreground">
+                  <button onClick={() => show("success", `Viewing ${doc.title}`, "Document opened in secure viewer")} className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border py-1.5 text-[10px] text-muted-foreground hover:border-electric-dim hover:text-foreground">
                     <Eye className="h-3 w-3" /> View
                   </button>
-                  <button className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border py-1.5 text-[10px] text-muted-foreground hover:border-electric-dim hover:text-foreground">
+                  <button onClick={() => { show("processing", `Downloading ${doc.title}...`); setTimeout(() => show("success", "Download complete", `${doc.fileSize} encrypted archive`), 1500); }} className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border py-1.5 text-[10px] text-muted-foreground hover:border-electric-dim hover:text-foreground">
                     <Download className="h-3 w-3" /> Download
                   </button>
                 </div>
@@ -201,7 +203,7 @@ export default function DocumentsPage() {
                     <td className="p-3 text-xs text-muted-foreground">{doc.fileSize}</td>
                     <td className="p-3 text-xs text-muted-foreground">{formatDate(doc.updatedAt)}</td>
                     <td className="p-3">
-                      <button className="text-muted-foreground hover:text-foreground">
+                      <button onClick={() => show("success", `Actions for ${doc.title}`)} className="text-muted-foreground hover:text-foreground">
                         <MoreVertical className="h-4 w-4" />
                       </button>
                     </td>

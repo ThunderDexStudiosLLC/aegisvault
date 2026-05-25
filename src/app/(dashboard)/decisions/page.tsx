@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lightbulb, User, Calendar, Tag, Filter, ArrowRight } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { decisions } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 
 const impactColors: Record<string, string> = {
   critical: "bg-destructive/10 text-destructive",
@@ -22,6 +23,9 @@ const statusColors: Record<string, string> = {
 export default function DecisionsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterImpact, setFilterImpact] = useState<string>("all");
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("executive-briefing"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = decisions.filter((d) => filterImpact === "all" || d.impact === filterImpact);
   const selected = decisions.find((d) => d.id === selectedId);

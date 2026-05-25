@@ -10,6 +10,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useGovernance } from "@/contexts/GovernanceContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { MemoryClassification } from "@/types";
 
 const classConfig: Record<MemoryClassification, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -40,7 +41,14 @@ type ViewMode = "dashboard" | "permissions" | "timeline" | "retention" | "founde
 export default function GovernancePage() {
   const engine = useGovernance();
   const { setState } = useOrb();
+  const { show } = useFeedback();
   const [view, setView] = useState<ViewMode>("dashboard");
+
+  const runGovAction = (label: string) => {
+    setState("indexing");
+    show("processing", `${label}...`, "Governance operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Compliance log updated"); setState("idle"); }, 2000);
+  };
   const [expandedMemory, setExpandedMemory] = useState<string | null>(null);
   const [classFilter, setClassFilter] = useState<MemoryClassification | "all">("all");
 
@@ -412,7 +420,7 @@ export default function GovernancePage() {
             ].map((action) => {
               const Icon = action.icon;
               return (
-                <button key={action.label} className="aegis-card rounded-xl p-4 text-left hover:bg-white/[0.02] transition-colors group">
+                <button key={action.label} onClick={() => runGovAction(action.label)} className="aegis-card rounded-xl p-4 text-left hover:bg-white/[0.02] transition-colors group">
                   <Icon className={cn("h-5 w-5 mb-2", action.color)} />
                   <p className="text-sm font-semibold text-foreground/90 group-hover:text-foreground">{action.label}</p>
                   <p className="text-[10px] text-muted-foreground/40">{action.desc}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Users, Mail, Phone, Building, Star, MessageSquare,
   Calendar, Tag, ExternalLink, Search,
@@ -8,6 +8,7 @@ import {
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { relationships } from "@/data/demo";
 import type { Relationship } from "@/types";
+import { useOrb } from "@/contexts/OrbContext";
 
 const typeColors: Record<string, string> = {
   investor: "bg-warning/10 text-warning",
@@ -29,6 +30,9 @@ export default function RelationshipsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("research"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = relationships.filter((r) => {
     if (filterType !== "all" && r.type !== filterType) return false;

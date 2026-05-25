@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Activity, FileText, FolderKanban, Calendar, Lightbulb,
   Users, Shield, Filter, Search,
 } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { activityLogs } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 
 const entityIcons: Record<string, React.ElementType> = {
   document: FileText,
@@ -31,6 +32,9 @@ const actionColors: Record<string, string> = {
 export default function ActivityPage() {
   const [filterType, setFilterType] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("indexing"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = activityLogs.filter((log) => {
     if (filterType !== "all" && log.entityType !== filterType) return false;

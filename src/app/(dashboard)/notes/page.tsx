@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Pin, Search, Shield, Tag, Edit3, Trash2, Clock } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { notes as demoNotes, tags as allTags } from "@/data/demo";
 import type { SecureNote } from "@/types";
+import { useFeedback } from "@/components/global/OperationalFeedback";
+import { useOrb } from "@/contexts/OrbContext";
 
 const classificationColors: Record<string, string> = {
   "public": "bg-success/10 text-success",
@@ -22,6 +24,10 @@ export default function NotesPage() {
   const [newContent, setNewContent] = useState("");
 
   const selected = notesList.find((n) => n.id === selectedId);
+  const { show } = useFeedback();
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("secure"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = notesList.filter((note) => {
     if (searchQuery && !note.title.toLowerCase().includes(searchQuery.toLowerCase()) && !note.content.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -49,10 +55,13 @@ export default function NotesPage() {
     setShowNewNote(false);
     setNewTitle("");
     setNewContent("");
+    show("success", "Note created", "Encrypted and saved to vault");
   };
 
   const togglePin = (id: string) => {
+    const note = notesList.find((n) => n.id === id);
     setNotesList(notesList.map((n) => n.id === id ? { ...n, isPinned: !n.isPinned } : n));
+    show("success", note?.isPinned ? "Note unpinned" : "Note pinned");
   };
 
   return (
@@ -173,7 +182,7 @@ export default function NotesPage() {
                   >
                     <Pin className="h-4 w-4" />
                   </button>
-                  <button className="rounded-lg p-2 text-muted-foreground hover:bg-white/[0.03] hover:text-foreground">
+                  <button onClick={() => show("success", "Edit mode", "Note unlocked for editing")} className="rounded-lg p-2 text-muted-foreground hover:bg-white/[0.03] hover:text-foreground">
                     <Edit3 className="h-4 w-4" />
                   </button>
                 </div>

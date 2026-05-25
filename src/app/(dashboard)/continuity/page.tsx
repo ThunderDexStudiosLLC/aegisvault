@@ -10,6 +10,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useContinuity } from "@/contexts/ContinuityContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { CriticalAssetCategory } from "@/types";
 
 const categoryConfig: Record<CriticalAssetCategory, { label: string; color: string; bg: string; icon: React.ElementType }> = {
@@ -58,6 +59,13 @@ type ViewMode = "dashboard" | "assets" | "graph" | "recovery" | "incidents";
 export default function ContinuityPage() {
   const engine = useContinuity();
   const { setState } = useOrb();
+  const { show } = useFeedback();
+
+  const runContAction = (label: string) => {
+    setState("processing");
+    show("processing", `${label}...`, "Continuity operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Operational log updated"); setState("idle"); }, 2000);
+  };
   const [view, setView] = useState<ViewMode>("dashboard");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<CriticalAssetCategory | "all">("all");
@@ -324,7 +332,7 @@ export default function ContinuityPage() {
               ].map((action) => {
                 const Icon = action.icon;
                 return (
-                  <button key={action.label} className="flex items-center gap-2 rounded-lg p-2.5 hover:bg-white/[0.02] transition-colors text-left">
+                  <button key={action.label} onClick={() => runContAction(action.label)} className="flex items-center gap-2 rounded-lg p-2.5 hover:bg-white/[0.02] transition-colors text-left">
                     <Icon className={cn("h-4 w-4 shrink-0", action.color)} />
                     <span className="text-xs text-foreground/70">{action.label}</span>
                   </button>

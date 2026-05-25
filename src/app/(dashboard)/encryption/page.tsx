@@ -11,6 +11,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useEncryption } from "@/contexts/EncryptionContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 
 type ViewMode = "trust" | "keys" | "zero-trust" | "intelligence" | "lockdown" | "devices";
 
@@ -46,6 +47,13 @@ export default function EncryptionPage() {
   const [lockdownMode, setLockdownMode] = useState<"none" | "partial" | "full" | "emergency">("none");
   const enc = useEncryption();
   const { setState } = useOrb();
+  const { show } = useFeedback();
+
+  const runAction = (label: string) => {
+    setState("processing");
+    show("processing", `${label}...`, "Operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Audit log entry created"); setState("secure"); }, 2000);
+  };
 
   useEffect(() => { setState("secure"); return () => setState("idle"); }, [setState]);
 
@@ -179,7 +187,7 @@ export default function EncryptionPage() {
               ].map((action) => {
                 const Icon = action.icon;
                 return (
-                  <button key={action.label} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
+                  <button key={action.label} onClick={() => runAction(action.label)} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
                     <Icon className="h-3 w-3" />
                     {action.label}
                   </button>
@@ -495,7 +503,7 @@ export default function EncryptionPage() {
                 const Icon = ctrl.icon;
                 const isActive = lockdownMode === ctrl.level;
                 return (
-                  <button key={ctrl.level} onClick={() => { setLockdownMode(ctrl.level); if (ctrl.level === "emergency") setState("emergency-lockdown"); else if (ctrl.level !== "none") setState("alert"); else setState("secure"); }}
+                  <button key={ctrl.level} onClick={() => { setLockdownMode(ctrl.level); if (ctrl.level === "emergency") { setState("emergency-lockdown"); show("error", "EMERGENCY LOCKDOWN ENGAGED", "All access frozen — founder authorization required"); } else if (ctrl.level !== "none") { setState("alert"); show("warning", `${ctrl.label} activated`, "Lockdown protocols engaged"); } else { setState("secure"); show("success", "Lockdown disengaged", "Systems restored to operational status"); } }}
                     className={cn("flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
                       isActive ? `border-${ctrl.color}/30 bg-${ctrl.color}/[0.04]` : "border-border/10 bg-white/[0.01] hover:bg-white/[0.02]"
                     )}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FolderKanban, FileText, Lightbulb, Users, Clock, Tag,
   BarChart3, Filter, ArrowRight,
@@ -8,6 +8,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { projects } from "@/data/demo";
 import type { Project } from "@/types";
+import { useOrb } from "@/contexts/OrbContext";
 
 const statusColors: Record<string, string> = {
   active: "bg-success/10 text-success",
@@ -27,6 +28,9 @@ const priorityColors: Record<string, string> = {
 export default function ProjectsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("autonomous"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = projects.filter((p) => {
     if (filterStatus !== "all" && p.status !== filterStatus) return false;

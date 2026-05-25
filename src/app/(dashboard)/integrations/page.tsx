@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plug, Brain, Server, Hammer, Radio, Phone, Crown,
   Cloud, Cpu, ScanLine, Mic, Search, MessageSquare, Users,
@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { integrations } from "@/data/demo";
+import { useFeedback } from "@/components/global/OperationalFeedback";
+import { useOrb } from "@/contexts/OrbContext";
 
 const iconMap: Record<string, React.ElementType> = {
   brain: Brain, server: Server, hammer: Hammer, radio: Radio,
@@ -32,6 +34,10 @@ const categories = [
 
 export default function IntegrationsPage() {
   const [filterCategory, setFilterCategory] = useState("all");
+  const { show } = useFeedback();
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("synchronization"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const filtered = integrations.filter((i) => filterCategory === "all" || i.category === filterCategory);
 
@@ -82,12 +88,12 @@ export default function IntegrationsPage() {
 
               <div className="mt-4">
                 {integration.status === "connected" && (
-                  <button className="w-full rounded-lg border border-border py-2 text-xs text-muted-foreground hover:text-foreground">
+                  <button onClick={() => show("success", `${integration.name} configured`, "Integration settings updated")} className="w-full rounded-lg border border-border py-2 text-xs text-muted-foreground hover:text-foreground">
                     Configure
                   </button>
                 )}
                 {integration.status === "available" && (
-                  <button className="w-full rounded-lg bg-electric py-2 text-xs font-medium text-white hover:bg-electric-glow">
+                  <button onClick={() => { show("processing", `Connecting ${integration.name}...`); setTimeout(() => show("success", `${integration.name} connected`, "Integration active"), 2000); }} className="w-full rounded-lg bg-electric py-2 text-xs font-medium text-white hover:bg-electric-glow">
                     Connect
                   </button>
                 )}

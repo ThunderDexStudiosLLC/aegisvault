@@ -10,6 +10,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useIronFrame } from "@/contexts/IronFrameContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { RiskSeverity } from "@/types";
 
 const sevConfig: Record<RiskSeverity, { label: string; color: string; bg: string }> = {
@@ -59,6 +60,13 @@ type ViewMode = "dashboard" | "identity" | "graph" | "ai-governance" | "threats"
 export default function SecurityPage() {
   const engine = useIronFrame();
   const { setState } = useOrb();
+  const { show } = useFeedback();
+
+  const runSecAction = (label: string) => {
+    setState("searching");
+    show("processing", `${label}...`, "Security scan in progress");
+    setTimeout(() => { show("security", `${label} completed`, "Results logged to audit trail"); setState("idle"); }, 2000);
+  };
   const [view, setView] = useState<ViewMode>("dashboard");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -338,7 +346,7 @@ export default function SecurityPage() {
               ].map((a) => {
                 const Icon = a.icon;
                 return (
-                  <button key={a.label} className="flex flex-col items-center gap-1.5 rounded-lg p-3 hover:bg-white/[0.02] transition-colors">
+                  <button key={a.label} onClick={() => runSecAction(a.label)} className="flex flex-col items-center gap-1.5 rounded-lg p-3 hover:bg-white/[0.02] transition-colors">
                     <Icon className={cn("h-4 w-4", a.color)} />
                     <span className="text-[10px] text-foreground/60 text-center">{a.label}</span>
                   </button>

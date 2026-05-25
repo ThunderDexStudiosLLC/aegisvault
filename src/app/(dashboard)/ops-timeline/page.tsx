@@ -11,6 +11,7 @@ import {
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { useTimeline } from "@/contexts/TimelineContext";
 import { useOrb } from "@/contexts/OrbContext";
+import { useFeedback } from "@/components/global/OperationalFeedback";
 import type { TimelineCategory, OpsMemoryType } from "@/types";
 
 type ViewMode = "timeline" | "recall" | "continuity" | "snapshots" | "graph";
@@ -65,7 +66,14 @@ export default function OpsTimelinePage() {
   const [categoryFilter, setCategoryFilter] = useState<TimelineCategory | "all">("all");
   const tl = useTimeline();
   const { setState } = useOrb();
+  const { show } = useFeedback();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const runTlAction = (label: string) => {
+    setState("linking-memory");
+    show("processing", `${label}...`, "Timeline operation in progress");
+    setTimeout(() => { show("success", `${label} completed`, "Memory governance maintained"); setState("idle"); }, 2000);
+  };
 
   useEffect(() => { setState("linking-memory"); return () => setState("idle"); }, [setState]);
 
@@ -580,7 +588,7 @@ export default function OpsTimelinePage() {
               ].map((action) => {
                 const AIcon = action.icon;
                 return (
-                  <button key={action.label} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
+                  <button key={action.label} onClick={() => runTlAction(action.label)} className="flex items-center gap-1.5 rounded-lg border border-border/10 bg-white/[0.02] px-3 py-1.5 text-[11px] text-foreground/60 hover:bg-electric/[0.04] hover:text-electric hover:border-electric/15 transition-all">
                     <AIcon className="h-3 w-3" />
                     {action.label}
                   </button>

@@ -16,6 +16,7 @@ import { EncryptionProvider } from "@/contexts/EncryptionContext";
 import { TimelineProvider } from "@/contexts/TimelineContext";
 import { ConsoleProvider } from "@/contexts/ConsoleContext";
 import { CommandPalette } from "@/components/global/CommandPalette";
+import { FeedbackProvider } from "@/components/global/OperationalFeedback";
 
 export default function DashboardLayout({
   children,
@@ -35,6 +36,7 @@ export default function DashboardLayout({
                       <EncryptionProvider>
                         <TimelineProvider>
                           <ConsoleProvider>
+                            <FeedbackProvider>
             <div className="flex min-h-screen relative">
               <AmbientEffects />
               <Sidebar />
@@ -44,6 +46,7 @@ export default function DashboardLayout({
                 <CommandPalette />
               </div>
             </div>
+                            </FeedbackProvider>
                           </ConsoleProvider>
                         </TimelineProvider>
                       </EncryptionProvider>

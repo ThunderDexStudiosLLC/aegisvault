@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MessageSquare, Mail, Phone, Calendar, FileText, Users,
   Search, Filter,
@@ -8,6 +8,7 @@ import {
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { relationships } from "@/data/demo";
 import type { CommunicationEntry } from "@/types";
+import { useOrb } from "@/contexts/OrbContext";
 
 const typeIcons: Record<string, React.ElementType> = {
   email: Mail,
@@ -28,6 +29,9 @@ const typeColors: Record<string, string> = {
 export default function CommunicationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const { setState } = useOrb();
+
+  useEffect(() => { setState("communications"); const t = setTimeout(() => setState("idle"), 3000); return () => clearTimeout(t); }, [setState]);
 
   const allComms: (CommunicationEntry & { contact: string; company: string })[] = relationships.flatMap((rel) =>
     rel.communicationHistory.map((comm) => ({
