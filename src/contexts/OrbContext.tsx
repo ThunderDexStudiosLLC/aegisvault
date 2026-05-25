@@ -4,6 +4,15 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 
 export type OrbState =
   | "idle"
+  | "listening"
+  | "processing"
+  | "alert"
+  | "secure"
+  | "communications"
+  | "founder"
+  | "research"
+  | "autonomous"
+  | "emergency-lockdown"
   | "indexing"
   | "searching"
   | "linking-memory"
@@ -21,6 +30,15 @@ interface OrbContextValue {
 
 const orbLabels: Record<OrbState, string> = {
   idle: "Standing By",
+  listening: "Listening",
+  processing: "Processing",
+  alert: "Security Alert",
+  secure: "All Systems Secure",
+  communications: "Communications Active",
+  founder: "Founder Mode",
+  research: "Research & Scanning",
+  autonomous: "Autonomous Operation",
+  "emergency-lockdown": "Emergency Lockdown",
   indexing: "Indexing Vault",
   searching: "Scanning Memory",
   "linking-memory": "Linking Memory",

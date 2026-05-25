@@ -11,6 +11,7 @@ import { IdentityProvider } from "@/contexts/IdentityContext";
 import { GovernanceProvider } from "@/contexts/GovernanceContext";
 import { ContinuityProvider } from "@/contexts/ContinuityContext";
 import { IronFrameProvider } from "@/contexts/IronFrameContext";
+import { CommandPalette } from "@/components/global/CommandPalette";
 
 export default function DashboardLayout({
   children,
@@ -32,6 +33,7 @@ export default function DashboardLayout({
               <div className="flex flex-1 flex-col pl-60 relative z-10">
                 <Header />
                 <main className="flex-1 p-6 aegis-page-enter">{children}</main>
+                <CommandPalette />
               </div>
             </div>
                   </IronFrameProvider>
