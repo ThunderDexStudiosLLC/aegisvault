@@ -7,7 +7,7 @@ import {
   LayoutDashboard, FileText, Clock, FolderKanban, Search,
   Share2, Users, Calendar, Brain, Activity, Settings, Shield,
   ChevronLeft, ChevronRight, MessageSquare, Landmark, Plug,
-  Bell, Lightbulb, Zap, Cpu, Globe, Crown,
+  Bell, Lightbulb, Zap, Cpu, Globe, Crown, Fingerprint,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SuperintelligenceOrb } from "@/components/aegis/SuperintelligenceOrb";
@@ -19,6 +19,7 @@ const navItems = [
   { label: "Memory Engine", href: "/memory", icon: Cpu },
   { label: "Ecosystem Intel", href: "/ecosystem", icon: Globe },
   { label: "Founder Command", href: "/founder", icon: Crown },
+  { label: "Identity & Access", href: "/identity", icon: Fingerprint },
   { label: "Memory Timeline", href: "/timeline", icon: Clock },
   { label: "Projects", href: "/projects", icon: FolderKanban },
   { label: "AI Search", href: "/search", icon: Search },

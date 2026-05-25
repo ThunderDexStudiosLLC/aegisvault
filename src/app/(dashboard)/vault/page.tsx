@@ -5,6 +5,7 @@ import {
   FileText, Clock, FolderKanban, Users, Brain, Activity,
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
   Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles, Crown,
+  Fingerprint, Key, Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -16,6 +17,7 @@ import { useOrb } from "@/contexts/OrbContext";
 import { useMemory } from "@/contexts/MemoryContext";
 import { useEcosystem } from "@/contexts/EcosystemContext";
 import { useFounder } from "@/contexts/FounderContext";
+import { useIdentity } from "@/contexts/IdentityContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -30,6 +32,7 @@ export default function VaultDashboard() {
   const memoryEngine = useMemory();
   const ecosystem = useEcosystem();
   const founder = useFounder();
+  const identity = useIdentity();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -371,6 +374,57 @@ export default function VaultDashboard() {
                         <span className="text-[9px] text-muted-foreground/30">{r.daysSinceOriginal}d</span>
                       </Link>
                     ))}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+
+          {/* Identity & Access */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Fingerprint className="h-4 w-4 text-emerald-400/70" />
+                Identity & Access
+              </h3>
+              <Link href="/identity" className="text-xs text-emerald-400/60 hover:text-emerald-400 transition-colors">Open</Link>
+            </div>
+            {(() => {
+              const idStats = identity.getStats();
+              const posture = identity.getSecurityPosture();
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-foreground">{idStats.activeIdentities}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">IDENTITIES</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-foreground">{idStats.totalCredentials}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">CREDENTIALS</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className={cn("text-lg font-bold", posture.overallScore >= 80 ? "text-success" : "text-warning")}>{posture.overallScore}%</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">SECURITY</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    {idStats.rotationsDue > 0 && (
+                      <div className="flex items-center gap-2 rounded-lg p-2 bg-warning/[0.03]">
+                        <Key className="h-3 w-3 text-warning/50 shrink-0" />
+                        <span className="text-xs text-warning/70 flex-1">{idStats.rotationsDue} credential rotation{idStats.rotationsDue > 1 ? 's' : ''} due</span>
+                      </div>
+                    )}
+                    {idStats.unresolvedEvents > 0 && (
+                      <div className="flex items-center gap-2 rounded-lg p-2 bg-destructive/[0.03]">
+                        <AlertTriangle className="h-3 w-3 text-destructive/50 shrink-0" />
+                        <span className="text-xs text-destructive/70 flex-1">{idStats.unresolvedEvents} unresolved event{idStats.unresolvedEvents > 1 ? 's' : ''}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 rounded-lg p-2">
+                      <Lock className="h-3 w-3 text-success/50 shrink-0" />
+                      <span className="text-xs text-foreground/50 flex-1">{idStats.mfaEnabled}/{idStats.totalIdentities} MFA enabled</span>
+                    </div>
                   </div>
                 </>
               );

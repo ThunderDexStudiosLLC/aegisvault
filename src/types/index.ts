@@ -499,3 +499,131 @@ export interface ExecutiveContinuitySummary {
   confidence: number;
   generatedAt: string;
 }
+
+/* ================================================================
+   IDENTITY & ACCESS INFRASTRUCTURE
+   ================================================================ */
+
+export type IdentityStatus = "active" | "suspended" | "pending" | "deactivated";
+export type MfaMethod = "totp" | "sms" | "email" | "hardware-key" | "biometric";
+export type CredentialType = "password" | "api-key" | "oauth-token" | "certificate" | "ssh-key" | "recovery-code" | "infra-secret";
+
+export interface IdentityProfile {
+  id: string;
+  displayName: string;
+  email: string;
+  role: string;
+  department: string;
+  status: IdentityStatus;
+  avatar?: string;
+  mfaEnabled: boolean;
+  mfaMethods: MfaMethod[];
+  lastLogin: string;
+  createdAt: string;
+  trustedDevices: TrustedDevice[];
+  activeSessions: IdentitySession[];
+  securityScore: number;
+  permissions: string[];
+  workspaceIds: string[];
+}
+
+export interface TrustedDevice {
+  id: string;
+  name: string;
+  type: "desktop" | "mobile" | "tablet" | "server" | "ai-agent";
+  os: string;
+  browser?: string;
+  lastActive: string;
+  location?: string;
+  trusted: boolean;
+  fingerprint: string;
+}
+
+export interface IdentitySession {
+  id: string;
+  identityId: string;
+  deviceId: string;
+  ipAddress: string;
+  location?: string;
+  startedAt: string;
+  lastActivity: string;
+  status: "active" | "idle" | "expired";
+  userAgent?: string;
+}
+
+export interface AccessRole {
+  id: string;
+  name: string;
+  description: string;
+  level: "system" | "organization" | "workspace" | "project" | "ai-agent";
+  permissions: Permission[];
+  memberCount: number;
+  createdAt: string;
+  isSystem: boolean;
+  color: string;
+}
+
+export interface Permission {
+  id: string;
+  resource: string;
+  actions: ("read" | "write" | "delete" | "admin" | "execute")[];
+  scope: "global" | "organization" | "workspace" | "project";
+  conditions?: string;
+}
+
+export interface StoredCredential {
+  id: string;
+  name: string;
+  type: CredentialType;
+  service: string;
+  username?: string;
+  encrypted: boolean;
+  strength?: "weak" | "fair" | "strong" | "excellent";
+  createdAt: string;
+  updatedAt: string;
+  expiresAt?: string;
+  lastUsed?: string;
+  usageCount: number;
+  rotationDue?: string;
+  tags: string[];
+  notes?: string;
+  linkedProductId?: string;
+}
+
+export interface AccessEvent {
+  id: string;
+  type: "login" | "logout" | "failed-login" | "permission-change" | "credential-access" | "mfa-challenge" | "session-created" | "anomaly" | "key-rotation";
+  identityId: string;
+  identityName: string;
+  description: string;
+  ipAddress: string;
+  location?: string;
+  deviceInfo?: string;
+  timestamp: string;
+  severity: "info" | "warning" | "critical";
+  resolved: boolean;
+}
+
+export interface EmergencyContact {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: "recovery-contact" | "delegated-admin" | "legal-custodian" | "operational-backup";
+  accessLevel: "full" | "limited" | "read-only" | "emergency-only";
+  activationCondition: string;
+  verified: boolean;
+  addedAt: string;
+  lastVerified?: string;
+}
+
+export interface SecurityPosture {
+  overallScore: number;
+  mfaAdoption: number;
+  credentialHealth: number;
+  deviceTrust: number;
+  accessHygiene: number;
+  anomalyRate: number;
+  lastAudit?: string;
+  recommendations: string[];
+}
