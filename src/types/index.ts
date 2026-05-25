@@ -926,3 +926,125 @@ export interface IronFrameStats {
   threatIntelItems: number;
   unacknowledgedThreats: number;
 }
+
+/* ================================================================
+   WORKSPACE ARCHITECTURE
+   ================================================================ */
+
+export type WorkspaceType = "personal" | "executive" | "team" | "department" | "enterprise" | "infrastructure" | "restricted" | "founder-private";
+
+export type WorkspaceRole = "founder" | "executive" | "administrator" | "security-officer" | "analyst" | "operations" | "ai-agent" | "viewer" | "restricted";
+
+export type WorkspaceSecurityState = "secure" | "monitoring" | "elevated-risk" | "lockdown" | "executive-mode" | "governance-review";
+
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  type: WorkspaceType;
+  description: string;
+  securityState: WorkspaceSecurityState;
+  encryptionScope: string;
+  governancePolicy: string;
+  createdAt: string;
+  lastAccessedAt: string;
+  owner: string;
+  memberCount: number;
+  aiAgentCount: number;
+  activeIntegrations: number;
+  securityScore: number;
+  tags: string[];
+  parentWorkspaceId?: string;
+  recoveryPolicy: string;
+  aiAccessLevel: "full" | "restricted" | "metadata-only" | "denied";
+}
+
+export interface WorkspaceMember {
+  id: string;
+  name: string;
+  email: string;
+  role: WorkspaceRole;
+  workspaceId: string;
+  joinedAt: string;
+  lastActiveAt: string;
+  mfaEnabled: boolean;
+  accessLevel: "full" | "read-only" | "restricted" | "emergency-only";
+  permissions: WorkspacePermission[];
+  status: "active" | "inactive" | "suspended" | "pending";
+}
+
+export interface WorkspacePermission {
+  resource: string;
+  actions: ("read" | "write" | "delete" | "admin" | "export" | "share")[];
+  scope: "workspace" | "department" | "global";
+  expiresAt?: string;
+}
+
+export interface WorkspaceAiAgent {
+  id: string;
+  name: string;
+  type: "orchestrator" | "analyst" | "security" | "operations" | "research" | "communications";
+  workspaceId: string;
+  identityScope: string;
+  permissionBoundary: string;
+  memoryRestriction: "full" | "workspace-only" | "summary-only" | "denied";
+  status: "active" | "paused" | "restricted" | "suspended";
+  lastAction: string;
+  lastActionAt: string;
+  totalActions: number;
+  totalMemoryAccess: number;
+  totalEscalations: number;
+  governanceCompliance: number;
+  auditLogCount: number;
+}
+
+export interface WorkspaceAuditEvent {
+  id: string;
+  workspaceId: string;
+  actor: string;
+  actorType: "human" | "ai-agent" | "system";
+  action: string;
+  resource: string;
+  timestamp: string;
+  severity: "info" | "warning" | "critical";
+  details?: string;
+}
+
+export interface CollaborationItem {
+  id: string;
+  type: "encrypted-note" | "shared-entry" | "discussion" | "comment" | "approval" | "handoff" | "acknowledgement";
+  title: string;
+  content: string;
+  workspaceId: string;
+  author: string;
+  participants: string[];
+  status: "active" | "pending" | "approved" | "completed" | "rejected";
+  createdAt: string;
+  updatedAt: string;
+  encrypted: boolean;
+  priority: "low" | "medium" | "high" | "critical";
+}
+
+export interface WorkspaceGraphNode {
+  id: string;
+  label: string;
+  type: "workspace" | "member" | "agent" | "role" | "integration";
+  status: "active" | "warning" | "restricted";
+  x: number;
+  y: number;
+  connections: string[];
+  workspaceId?: string;
+}
+
+export interface WorkspaceStats {
+  totalWorkspaces: number;
+  activeMembers: number;
+  aiAgents: number;
+  securityScore: number;
+  activeCollaborations: number;
+  pendingApprovals: number;
+  auditEventsToday: number;
+  encryptedNotes: number;
+  workspacesInLockdown: number;
+  governanceCompliance: number;
+}

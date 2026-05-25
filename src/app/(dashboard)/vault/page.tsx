@@ -22,6 +22,8 @@ import { useIdentity } from "@/contexts/IdentityContext";
 import { useGovernance } from "@/contexts/GovernanceContext";
 import { useContinuity } from "@/contexts/ContinuityContext";
 import { useIronFrame } from "@/contexts/IronFrameContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { Layers } from "lucide-react";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -40,6 +42,7 @@ export default function VaultDashboard() {
   const governance = useGovernance();
   const continuity = useContinuity();
   const ironframe = useIronFrame();
+  const workspace = useWorkspace();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -606,6 +609,43 @@ export default function VaultDashboard() {
                 </>
               );
             })()}
+          </div>
+
+          {/* Workspace Architecture */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Layers className="h-4 w-4 text-electric/70" />
+                Workspaces
+              </h3>
+              <Link href="/workspaces" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">Manage</Link>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-electric">{workspace.stats.totalWorkspaces}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">SPACES</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-emerald-400">{workspace.stats.activeMembers}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">MEMBERS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-purple-400">{workspace.stats.aiAgents}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">AI AGENTS</p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              {workspace.stats.pendingApprovals > 0 && (
+                <div className="flex items-center gap-2 rounded-lg p-2 bg-warning/[0.03]">
+                  <AlertTriangle className="h-3 w-3 text-warning/50 shrink-0" />
+                  <span className="text-xs text-warning/70">{workspace.stats.pendingApprovals} pending approvals</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2 rounded-lg p-2">
+                <Shield className="h-3 w-3 text-success/50 shrink-0" />
+                <span className="text-xs text-foreground/50">{workspace.stats.governanceCompliance}% governance compliance</span>
+              </div>
+            </div>
           </div>
 
           {/* Relationship Alerts */}

@@ -7,7 +7,7 @@ import {
   ShieldCheck, Server, Radar, Clock, FolderKanban, Share2,
   Users, Calendar, Brain, Activity, Settings, Plug,
   MessageSquare, Lightbulb, Zap, Bot, Lock, RefreshCw,
-  Clipboard, Download, Eye, Radio, Command, ArrowRight,
+  Clipboard, Download, Eye, Radio, Command, ArrowRight, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useOrb } from "@/contexts/OrbContext";
@@ -55,6 +55,7 @@ export function CommandPalette() {
     { id: "nav-activity", label: "Activity Log", category: "navigation", icon: Activity, action: () => nav("/activity") },
     { id: "nav-integrations", label: "Integrations", category: "navigation", icon: Plug, action: () => nav("/integrations") },
     { id: "nav-settings", label: "Settings", category: "navigation", icon: Settings, action: () => nav("/settings") },
+    { id: "nav-workspaces", label: "Workspaces", category: "navigation", icon: Layers, action: () => nav("/workspaces") },
     // AI Actions
     { id: "ai-recall", label: "Quick Memory Recall", category: "ai", icon: Bot, description: "AI-powered contextual memory search", action: () => { setState("searching"); nav("/memory"); } },
     { id: "ai-summary", label: "Generate Executive Briefing", category: "ai", icon: Brain, description: "AI-generated operational summary", action: () => { setState("generating-summaries"); nav("/vault/summaries"); } },

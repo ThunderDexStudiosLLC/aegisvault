@@ -8,7 +8,7 @@ import {
   Share2, Users, Calendar, Brain, Activity, Settings, Shield,
   ChevronLeft, ChevronRight, MessageSquare, Landmark, Plug,
   Bell, Lightbulb, Zap, Cpu, Globe, Crown, Fingerprint, ShieldCheck,
-  Server, Radar,
+  Server, Radar, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SuperintelligenceOrb } from "@/components/aegis/SuperintelligenceOrb";
@@ -50,6 +50,7 @@ const navGroups: NavGroup[] = [
     label: "Security",
     items: [
       { label: "IronFrame Security", href: "/security", icon: Radar },
+      { label: "Workspaces", href: "/workspaces", icon: Layers },
       { label: "Identity & Access", href: "/identity", icon: Fingerprint },
       { label: "Memory Governance", href: "/governance", icon: ShieldCheck },
       { label: "Continuity", href: "/continuity", icon: Server },
