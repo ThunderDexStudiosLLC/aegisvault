@@ -27,16 +27,16 @@ export default function DecisionsPage() {
   const selected = decisions.find((d) => d.id === selectedId);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Decision Memory</h1>
-          <p className="text-sm text-muted-foreground">Track and recall every strategic decision across the ecosystem</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Decision Memory</h1>
+          <p className="text-sm text-muted-foreground/70">Track and recall every strategic decision across the ecosystem</p>
         </div>
         <select
           value={filterImpact}
           onChange={(e) => setFilterImpact(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Impact</option>
           <option value="critical">Critical</option>
@@ -86,7 +86,7 @@ export default function DecisionsPage() {
 
         <div>
           {selected ? (
-            <div className="glass rounded-xl p-4 sticky top-24">
+            <div className="aegis-card rounded-xl p-4 sticky top-24">
               <div className="border-b border-border pb-3">
                 <h2 className="text-sm font-semibold text-foreground">{selected.title}</h2>
                 <div className="mt-2 flex items-center gap-2">
@@ -98,11 +98,11 @@ export default function DecisionsPage() {
               <div className="mt-4 space-y-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Description</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{selected.description}</p>
+                  <p className="mt-1 text-sm text-muted-foreground/70">{selected.description}</p>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Rationale</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{selected.rationale}</p>
+                  <p className="mt-1 text-sm text-muted-foreground/70">{selected.rationale}</p>
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Made By</p>
@@ -131,9 +131,9 @@ export default function DecisionsPage() {
               </div>
             </div>
           ) : (
-            <div className="glass rounded-xl p-6 text-center">
+            <div className="aegis-card rounded-xl p-6 text-center">
               <Lightbulb className="mx-auto h-10 w-10 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">Select a decision to view details</p>
+              <p className="mt-3 text-sm text-muted-foreground/70">Select a decision to view details</p>
             </div>
           )}
         </div>

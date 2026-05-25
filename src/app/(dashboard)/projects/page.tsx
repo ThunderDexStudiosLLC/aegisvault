@@ -36,17 +36,17 @@ export default function ProjectsPage() {
   const selected = projects.find((p) => p.id === selectedId);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Project Intelligence</h1>
-          <p className="text-sm text-muted-foreground">{projects.length} projects tracked across the ecosystem</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Project Intelligence</h1>
+          <p className="text-sm text-muted-foreground/70">{projects.length} projects tracked across the ecosystem</p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+            className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -114,7 +114,7 @@ export default function ProjectsPage() {
         {/* Project Detail */}
         <div>
           {selected ? (
-            <div className="glass rounded-xl p-4 sticky top-24">
+            <div className="aegis-card rounded-xl p-4 sticky top-24">
               <div className="flex items-center gap-2 border-b border-border pb-3">
                 <FolderKanban className="h-5 w-5 text-electric" />
                 <h2 className="text-lg font-semibold text-foreground">{selected.name}</h2>
@@ -158,7 +158,7 @@ export default function ProjectsPage() {
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Team</p>
                   <div className="mt-2 space-y-2">
                     {selected.team.map((member) => (
-                      <div key={member} className="flex items-center gap-2 rounded-lg border border-border p-2">
+                      <div key={member} className="flex items-center gap-2 rounded-lg border border-border/20 p-2">
                         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-electric/10 text-electric text-[10px] font-bold">
                           {member.split(" ").map((n) => n[0]).join("")}
                         </div>
@@ -190,7 +190,7 @@ export default function ProjectsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 rounded-lg border border-border p-3">
+                <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/20 p-3">
                   <div className="text-center">
                     <p className="text-xl font-bold text-foreground">{selected.noteCount}</p>
                     <p className="text-[10px] text-muted-foreground">Notes</p>
@@ -203,9 +203,9 @@ export default function ProjectsPage() {
               </div>
             </div>
           ) : (
-            <div className="glass rounded-xl p-6 text-center">
+            <div className="aegis-card rounded-xl p-6 text-center">
               <FolderKanban className="mx-auto h-10 w-10 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">Select a project to view intelligence</p>
+              <p className="mt-3 text-sm text-muted-foreground/70">Select a project to view intelligence</p>
             </div>
           )}
         </div>

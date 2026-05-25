@@ -49,11 +49,11 @@ export default function CommunicationsPage() {
   });
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Communication Archive</h1>
-          <p className="text-sm text-muted-foreground">Searchable history of all communications across relationships</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Communication Archive</h1>
+          <p className="text-sm text-muted-foreground/70">Searchable history of all communications across relationships</p>
         </div>
       </div>
 
@@ -65,13 +65,13 @@ export default function CommunicationsPage() {
             placeholder="Search communications..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Types</option>
           <option value="email">Email</option>
@@ -86,7 +86,7 @@ export default function CommunicationsPage() {
         {filtered.map((comm) => {
           const Icon = typeIcons[comm.type] || MessageSquare;
           return (
-            <div key={comm.id} className="glass glass-hover rounded-xl p-4 transition-all">
+            <div key={comm.id} className="glass-interactive rounded-xl p-4 transition-all">
               <div className="flex items-start gap-4">
                 <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg", typeColors[comm.type])}>
                   <Icon className="h-5 w-5" />
@@ -120,7 +120,7 @@ export default function CommunicationsPage() {
         {filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center rounded-xl border border-border py-12">
             <MessageSquare className="h-10 w-10 text-muted-foreground" />
-            <p className="mt-3 text-sm text-muted-foreground">No communications found</p>
+            <p className="mt-3 text-sm text-muted-foreground/70">No communications found</p>
           </div>
         )}
       </div>

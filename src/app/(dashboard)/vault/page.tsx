@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FileText, Clock, FolderKanban, Users, Brain, Activity,
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
-  Calendar, Star, Zap,
+  Calendar, Star, Zap, Radio,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -12,6 +12,7 @@ import {
   projects, memories, decisions, activityLogs,
   notifications, aiSummaries, meetings, relationships,
 } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -22,6 +23,7 @@ const stats = [
 
 export default function VaultDashboard() {
   const [activeTab, setActiveTab] = useState<"briefing" | "activity" | "alerts">("briefing");
+  const { setState } = useOrb();
   const executiveBriefing = aiSummaries.find((s) => s.type === "executive");
   const criticalDecisions = decisions.filter((d) => d.impact === "critical" || d.impact === "high");
   const activeProjects = projects.filter((p) => p.status === "active");
@@ -29,31 +31,38 @@ export default function VaultDashboard() {
   const unreadNotifications = notifications.filter((n) => !n.read);
   const upcomingMeetings = meetings.slice(0, 3);
 
+  useEffect(() => {
+    setState("executive-briefing");
+    const timer = setTimeout(() => setState("idle"), 4000);
+    return () => clearTimeout(timer);
+  }, [setState]);
+
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
+      {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Vault Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Operational intelligence overview &mdash; IronReserve Holdings</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Vault Dashboard</h1>
+          <p className="text-sm text-muted-foreground/70">Operational intelligence overview &mdash; IronReserve Holdings</p>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-electric-dim/30 bg-electric/5 px-4 py-2">
-          <Shield className="h-4 w-4 text-electric" />
-          <span className="text-xs font-medium text-electric-glow">Classification: CONFIDENTIAL</span>
+        <div className="aegis-badge aegis-badge-electric">
+          <Shield className="h-3 w-3" />
+          Classification: CONFIDENTIAL
         </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-4">
-        {stats.map((stat) => {
+        {stats.map((stat, i) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="glass rounded-xl p-4">
+            <div key={stat.label} className="aegis-card p-4 holo-shimmer" style={{ animationDelay: `${i * 2}s` }}>
               <div className="flex items-center justify-between">
                 <Icon className={cn("h-5 w-5", stat.color)} />
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{stat.label}</span>
+                <span className="text-[9px] font-mono uppercase tracking-[0.1em] text-muted-foreground/60">{stat.label}</span>
               </div>
               <p className="mt-3 text-3xl font-bold text-foreground">{stat.value}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{stat.trend}</p>
+              <p className="mt-1 text-xs text-muted-foreground/60">{stat.trend}</p>
             </div>
           );
         })}
@@ -63,8 +72,8 @@ export default function VaultDashboard() {
         {/* Main Content Area */}
         <div className="col-span-2 space-y-6">
           {/* AI Briefing / Activity / Alerts Tabs */}
-          <div className="glass rounded-xl">
-            <div className="flex border-b border-border">
+          <div className="aegis-card">
+            <div className="flex border-b border-border/50">
               {[
                 { key: "briefing" as const, label: "AI Briefing", icon: Brain },
                 { key: "activity" as const, label: "Recent Activity", icon: Activity },
@@ -74,16 +83,16 @@ export default function VaultDashboard() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={cn(
-                    "flex items-center gap-2 border-b-2 px-4 py-3 text-sm transition-colors",
+                    "flex items-center gap-2 border-b-2 px-4 py-3 text-sm transition-all duration-300",
                     activeTab === tab.key
                       ? "border-electric text-electric-glow"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
+                      : "border-transparent text-muted-foreground/60 hover:text-foreground/80"
                   )}
                 >
                   <tab.icon className="h-4 w-4" />
                   {tab.label}
                   {tab.key === "alerts" && unreadNotifications.length > 0 && (
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-electric text-[10px] text-white">
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-electric/80 text-[10px] text-white shadow-[0_0_6px_rgba(59,130,246,0.4)]">
                       {unreadNotifications.length}
                     </span>
                   )}
@@ -93,63 +102,64 @@ export default function VaultDashboard() {
 
             <div className="p-4">
               {activeTab === "briefing" && executiveBriefing && (
-                <div className="space-y-3">
+                <div className="space-y-3 animate-fade-in">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-foreground">{executiveBriefing.title}</h3>
-                    <span className="rounded bg-electric/10 px-2 py-0.5 text-[10px] text-electric-glow">
+                    <span className="aegis-badge aegis-badge-electric">
                       {executiveBriefing.sourceCount} sources &bull; {Math.round(executiveBriefing.confidence * 100)}% confidence
                     </span>
                   </div>
-                  <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap text-sm text-muted-foreground">
+                  <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap text-sm text-muted-foreground/80">
                     {executiveBriefing.content}
                   </div>
-                  <Link href="/vault/summaries" className="inline-flex items-center gap-1 text-xs text-electric hover:text-electric-glow">
+                  <Link href="/vault/summaries" className="inline-flex items-center gap-1 text-xs text-electric/80 hover:text-electric-glow transition-colors">
                     View all AI summaries <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               )}
 
               {activeTab === "activity" && (
-                <div className="space-y-3">
+                <div className="space-y-2 animate-fade-in">
                   {activityLogs.slice(0, 8).map((log) => (
-                    <div key={log.id} className="flex items-start gap-3 rounded-lg p-2 hover:bg-secondary/50">
-                      <Activity className="mt-0.5 h-4 w-4 shrink-0 text-electric" />
+                    <div key={log.id} className="flex items-start gap-3 rounded-lg p-2 hover:bg-white/[0.02] transition-colors">
+                      <Activity className="mt-0.5 h-4 w-4 shrink-0 text-electric/60" />
                       <div className="flex-1">
-                        <p className="text-sm text-foreground">
-                          <span className="text-electric-glow">{log.user}</span>{" "}
-                          <span className="text-muted-foreground">{log.action}</span>{" "}
+                        <p className="text-sm text-foreground/90">
+                          <span className="text-electric-glow/80">{log.user}</span>{" "}
+                          <span className="text-muted-foreground/60">{log.action}</span>{" "}
                           {log.entity}
                         </p>
-                        <p className="text-xs text-muted-foreground">{formatRelativeTime(log.timestamp)}</p>
+                        <p className="text-xs text-muted-foreground/40">{formatRelativeTime(log.timestamp)}</p>
                       </div>
                     </div>
                   ))}
-                  <Link href="/activity" className="inline-flex items-center gap-1 text-xs text-electric hover:text-electric-glow">
+                  <Link href="/activity" className="inline-flex items-center gap-1 text-xs text-electric/80 hover:text-electric-glow transition-colors">
                     View full activity log <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               )}
 
               {activeTab === "alerts" && (
-                <div className="space-y-3">
+                <div className="space-y-2 animate-fade-in">
                   {notifications.map((notif) => (
                     <div
                       key={notif.id}
                       className={cn(
-                        "flex items-start gap-3 rounded-lg p-3",
-                        !notif.read ? "bg-electric/5 border border-electric-dim/20" : "hover:bg-secondary/50"
+                        "flex items-start gap-3 rounded-lg p-3 transition-colors",
+                        !notif.read ? "bg-electric/[0.03] border border-electric/10" : "hover:bg-white/[0.02]"
                       )}
                     >
                       <div className={cn(
-                        "mt-0.5 h-2 w-2 shrink-0 rounded-full",
-                        notif.type === "alert" ? "bg-destructive" :
-                        notif.type === "warning" ? "bg-warning" :
-                        notif.type === "success" ? "bg-success" : "bg-electric"
+                        "mt-1.5 h-2 w-2 shrink-0 rounded-full",
+                        notif.type === "alert" ? "bg-destructive shadow-[0_0_6px_rgba(239,68,68,0.4)]" :
+                        notif.type === "warning" ? "bg-warning shadow-[0_0_6px_rgba(245,158,11,0.4)]" :
+                        notif.type === "success" ? "bg-success shadow-[0_0_6px_rgba(34,197,94,0.4)]" :
+                        "bg-electric shadow-[0_0_6px_rgba(59,130,246,0.4)]"
                       )} />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{notif.title}</p>
-                        <p className="text-xs text-muted-foreground">{notif.message}</p>
-                        <p className="mt-1 text-[10px] text-muted-foreground">{formatRelativeTime(notif.timestamp)}</p>
+                        <p className="text-sm font-medium text-foreground/90">{notif.title}</p>
+                        <p className="text-xs text-muted-foreground/60">{notif.message}</p>
+                        <p className="mt-1 text-[10px] text-muted-foreground/40">{formatRelativeTime(notif.timestamp)}</p>
                       </div>
                     </div>
                   ))}
@@ -159,31 +169,34 @@ export default function VaultDashboard() {
           </div>
 
           {/* Active Projects */}
-          <div className="glass rounded-xl p-4">
+          <div className="aegis-card p-4">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-foreground">Active Projects</h3>
-              <Link href="/projects" className="text-xs text-electric hover:text-electric-glow">View all</Link>
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Radio className="h-3.5 w-3.5 text-electric/60" />
+                Active Projects
+              </h3>
+              <Link href="/projects" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
             </div>
             <div className="space-y-3">
               {activeProjects.map((project) => (
-                <Link key={project.id} href="/projects" className="block rounded-lg border border-border p-3 transition-colors hover:border-electric-dim/30 hover:bg-secondary/30">
+                <Link key={project.id} href="/projects" className="block rounded-lg border border-border/30 p-3 transition-all hover:border-electric/15 hover:bg-white/[0.02]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <FolderKanban className="h-4 w-4 text-electric" />
-                      <span className="text-sm font-medium text-foreground">{project.name}</span>
+                      <FolderKanban className="h-4 w-4 text-electric/60" />
+                      <span className="text-sm font-medium text-foreground/90">{project.name}</span>
                       {project.priority === "critical" && (
-                        <span className="rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] text-destructive">CRITICAL</span>
+                        <span className="rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] text-destructive shadow-[0_0_4px_rgba(239,68,68,0.2)]">CRITICAL</span>
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground">{project.progress}%</span>
+                    <span className="text-xs text-muted-foreground/50">{project.progress}%</span>
                   </div>
-                  <div className="mt-2 h-1.5 w-full rounded-full bg-secondary">
+                  <div className="mt-2 h-1 w-full rounded-full bg-white/[0.03]">
                     <div
-                      className="h-1.5 rounded-full bg-electric transition-all"
+                      className="h-1 rounded-full bg-gradient-to-r from-electric/80 to-electric-glow/60 transition-all shadow-[0_0_6px_rgba(59,130,246,0.3)]"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
-                  <div className="mt-2 flex items-center gap-3 text-[10px] text-muted-foreground">
+                  <div className="mt-2 flex items-center gap-3 text-[10px] text-muted-foreground/40">
                     <span>{project.noteCount} notes</span>
                     <span>{project.decisionCount} decisions</span>
                     <span>{project.team.length} members</span>
@@ -197,28 +210,28 @@ export default function VaultDashboard() {
         {/* Right Sidebar */}
         <div className="space-y-6">
           {/* Critical Decisions */}
-          <div className="glass rounded-xl p-4">
+          <div className="aegis-card p-4">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Lightbulb className="h-4 w-4 text-warning" />
+                <Lightbulb className="h-4 w-4 text-warning/80" />
                 Critical Decisions
               </h3>
-              <Link href="/decisions" className="text-xs text-electric hover:text-electric-glow">View all</Link>
+              <Link href="/decisions" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
             </div>
             <div className="space-y-3">
               {criticalDecisions.slice(0, 4).map((dec) => (
-                <div key={dec.id} className="rounded-lg border border-border p-3">
-                  <p className="text-sm font-medium text-foreground">{dec.title}</p>
+                <div key={dec.id} className="rounded-lg border border-border/20 p-3 hover:border-electric/10 transition-colors">
+                  <p className="text-sm font-medium text-foreground/90">{dec.title}</p>
                   <div className="mt-2 flex items-center gap-2">
                     <span className={cn(
                       "rounded px-1.5 py-0.5 text-[10px]",
-                      dec.status === "implemented" ? "bg-success/10 text-success" :
-                      dec.status === "approved" ? "bg-electric/10 text-electric-glow" :
-                      "bg-warning/10 text-warning"
+                      dec.status === "implemented" ? "bg-success/10 text-success/80" :
+                      dec.status === "approved" ? "bg-electric/10 text-electric-glow/80" :
+                      "bg-warning/10 text-warning/80"
                     )}>
                       {dec.status}
                     </span>
-                    <span className="text-[10px] text-muted-foreground">{formatRelativeTime(dec.date)}</span>
+                    <span className="text-[10px] text-muted-foreground/40">{formatRelativeTime(dec.date)}</span>
                   </div>
                 </div>
               ))}
@@ -226,33 +239,33 @@ export default function VaultDashboard() {
           </div>
 
           {/* Upcoming Meetings */}
-          <div className="glass rounded-xl p-4">
+          <div className="aegis-card p-4">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Calendar className="h-4 w-4 text-electric" />
+                <Calendar className="h-4 w-4 text-electric/70" />
                 Meeting Intelligence
               </h3>
-              <Link href="/meetings" className="text-xs text-electric hover:text-electric-glow">View all</Link>
+              <Link href="/meetings" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
             </div>
             <div className="space-y-3">
               {upcomingMeetings.map((meeting) => (
-                <div key={meeting.id} className="rounded-lg border border-border p-3">
-                  <p className="text-sm font-medium text-foreground">{meeting.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{meeting.attendees.length} attendees &bull; {meeting.duration}min</p>
-                  <p className="mt-1 text-[10px] text-muted-foreground">{formatRelativeTime(meeting.date)}</p>
+                <div key={meeting.id} className="rounded-lg border border-border/20 p-3 hover:border-electric/10 transition-colors">
+                  <p className="text-sm font-medium text-foreground/90">{meeting.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground/50">{meeting.attendees.length} attendees &bull; {meeting.duration}min</p>
+                  <p className="mt-1 text-[10px] text-muted-foreground/40">{formatRelativeTime(meeting.date)}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Memory Timeline Preview */}
-          <div className="glass rounded-xl p-4">
+          <div className="aegis-card p-4">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Clock className="h-4 w-4 text-electric-glow" />
+                <Clock className="h-4 w-4 text-electric-glow/70" />
                 Memory Timeline
               </h3>
-              <Link href="/timeline" className="text-xs text-electric hover:text-electric-glow">View all</Link>
+              <Link href="/timeline" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
             </div>
             <div className="space-y-3">
               {recentMemories.map((memory) => (
@@ -260,17 +273,17 @@ export default function VaultDashboard() {
                   <div className="mt-1 flex flex-col items-center">
                     <div className={cn(
                       "h-2 w-2 rounded-full",
-                      memory.importance === "critical" ? "bg-destructive" :
-                      memory.importance === "high" ? "bg-warning" :
-                      "bg-electric"
+                      memory.importance === "critical" ? "bg-destructive shadow-[0_0_4px_rgba(239,68,68,0.4)]" :
+                      memory.importance === "high" ? "bg-warning shadow-[0_0_4px_rgba(245,158,11,0.4)]" :
+                      "bg-electric shadow-[0_0_4px_rgba(59,130,246,0.3)]"
                     )} />
-                    <div className="mt-1 h-8 w-px bg-border" />
+                    <div className="mt-1 h-8 w-px bg-border/30" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-foreground">{memory.title}</p>
+                    <p className="text-xs font-medium text-foreground/90">{memory.title}</p>
                     <div className="mt-0.5 flex items-center gap-2">
-                      <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground">{memory.type}</span>
-                      <span className="text-[10px] text-muted-foreground">{formatRelativeTime(memory.date)}</span>
+                      <span className="rounded bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-muted-foreground/50">{memory.type}</span>
+                      <span className="text-[10px] text-muted-foreground/40">{formatRelativeTime(memory.date)}</span>
                     </div>
                   </div>
                 </div>
@@ -279,25 +292,25 @@ export default function VaultDashboard() {
           </div>
 
           {/* Relationship Alerts */}
-          <div className="glass rounded-xl p-4">
+          <div className="aegis-card p-4">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Star className="h-4 w-4 text-warning" />
+                <Star className="h-4 w-4 text-warning/80" />
                 Key Relationships
               </h3>
-              <Link href="/relationships" className="text-xs text-electric hover:text-electric-glow">View all</Link>
+              <Link href="/relationships" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
             </div>
             <div className="space-y-3">
               {relationships.filter((r) => r.strategicImportance === "critical").slice(0, 4).map((rel) => (
-                <div key={rel.id} className="flex items-center gap-3 rounded-lg border border-border p-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-electric/10 text-electric">
+                <div key={rel.id} className="flex items-center gap-3 rounded-lg border border-border/20 p-2 hover:border-electric/10 transition-colors">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-electric/[0.06] text-electric/70 ring-1 ring-electric/10">
                     <Users className="h-3.5 w-3.5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-medium text-foreground">{rel.name}</p>
-                    <p className="text-[10px] text-muted-foreground">{rel.role} &bull; {rel.company}</p>
+                    <p className="text-xs font-medium text-foreground/90">{rel.name}</p>
+                    <p className="text-[10px] text-muted-foreground/40">{rel.role} &bull; {rel.company}</p>
                   </div>
-                  <Zap className="h-3 w-3 text-warning" />
+                  <Zap className="h-3 w-3 text-warning/60" />
                 </div>
               ))}
             </div>

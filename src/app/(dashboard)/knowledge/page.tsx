@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Share2, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { knowledgeNodes } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 import type { KnowledgeNode } from "@/types";
 
 const nodeColors: Record<string, { bg: string; border: string; text: string }> = {
@@ -22,6 +23,13 @@ export default function KnowledgeGraphPage() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const { setState } = useOrb();
+
+  useEffect(() => {
+    setState("high-orchestration");
+    const timer = setTimeout(() => setState("idle"), 3000);
+    return () => clearTimeout(timer);
+  }, [setState]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -122,11 +130,11 @@ export default function KnowledgeGraphPage() {
   const handleMouseUp = () => setIsDragging(false);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Knowledge Graph</h1>
-          <p className="text-sm text-muted-foreground">Visualize relationships between projects, people, companies, and decisions</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Knowledge Graph</h1>
+          <p className="text-sm text-muted-foreground/70">Visualize relationships between projects, people, companies, and decisions</p>
         </div>
       </div>
 
@@ -172,7 +180,7 @@ export default function KnowledgeGraphPage() {
         {/* Node Detail */}
         <div>
           {selectedNode ? (
-            <div className="glass rounded-xl p-4 sticky top-24">
+            <div className="aegis-card rounded-xl p-4 sticky top-24">
               <div className="flex items-center gap-2 border-b border-border pb-3">
                 <div className="h-3 w-3 rounded-full" style={{ backgroundColor: nodeColors[selectedNode.type]?.border || "#3b82f6" }} />
                 <h2 className="text-sm font-semibold text-foreground">{selectedNode.label}</h2>
@@ -192,7 +200,7 @@ export default function KnowledgeGraphPage() {
                         <button
                           key={connId}
                           onClick={() => setSelectedNode(connected)}
-                          className="flex w-full items-center gap-2 rounded-lg border border-border p-2 text-left hover:bg-secondary/50"
+                          className="flex w-full items-center gap-2 rounded-lg border border-border/20 p-2 text-left hover:bg-white/[0.02]"
                         >
                           <div className="h-2 w-2 rounded-full" style={{ backgroundColor: nodeColors[connected.type]?.border || "#3b82f6" }} />
                           <span className="text-xs text-foreground">{connected.label}</span>
@@ -205,9 +213,9 @@ export default function KnowledgeGraphPage() {
               </div>
             </div>
           ) : (
-            <div className="glass rounded-xl p-6 text-center">
+            <div className="aegis-card rounded-xl p-6 text-center">
               <Share2 className="mx-auto h-10 w-10 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">Click a node to view details</p>
+              <p className="mt-3 text-sm text-muted-foreground/70">Click a node to view details</p>
               <p className="mt-1 text-xs text-muted-foreground">Drag to pan, scroll to zoom</p>
             </div>
           )}

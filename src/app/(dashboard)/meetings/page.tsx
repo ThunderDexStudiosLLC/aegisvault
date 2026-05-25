@@ -25,13 +25,13 @@ export default function MeetingsPage() {
   const selected = meetings.find((m) => m.id === selectedId);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Meeting Intelligence</h1>
-          <p className="text-sm text-muted-foreground">AI-powered meeting summaries, decisions, and follow-ups</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Meeting Intelligence</h1>
+          <p className="text-sm text-muted-foreground/70">AI-powered meeting summaries, decisions, and follow-ups</p>
         </div>
-        <button className="flex items-center gap-2 rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow">
+        <button className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
           <Calendar className="h-4 w-4" />
           Log Meeting
         </button>
@@ -73,7 +73,7 @@ export default function MeetingsPage() {
 
         <div className="col-span-2">
           {selected ? (
-            <div className="glass rounded-xl p-6">
+            <div className="aegis-card rounded-xl p-6">
               <div className="border-b border-border pb-4">
                 <h2 className="text-lg font-semibold text-foreground">{selected.title}</h2>
                 <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
@@ -112,7 +112,7 @@ export default function MeetingsPage() {
                   </h3>
                   <div className="mt-2 space-y-2">
                     {selected.keyDecisions.map((decision, i) => (
-                      <div key={i} className="flex items-start gap-2 rounded-lg border border-border p-3">
+                      <div key={i} className="flex items-start gap-2 rounded-lg border border-border/20 p-3">
                         <div className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-warning/10 flex items-center justify-center text-[10px] font-bold text-warning">
                           {i + 1}
                         </div>
@@ -129,7 +129,7 @@ export default function MeetingsPage() {
                     {selected.followUpTasks.map((task) => {
                       const StatusIcon = taskStatusIcons[task.status] || Circle;
                       return (
-                        <div key={task.id} className="flex items-start gap-3 rounded-lg border border-border p-3">
+                        <div key={task.id} className="flex items-start gap-3 rounded-lg border border-border/20 p-3">
                           <StatusIcon className={cn("mt-0.5 h-4 w-4 shrink-0", taskStatusColors[task.status])} />
                           <div className="flex-1">
                             <p className="text-sm text-foreground">{task.title}</p>
@@ -163,7 +163,7 @@ export default function MeetingsPage() {
               </div>
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+            <div className="flex h-64 items-center justify-center text-sm text-muted-foreground/70">
               Select a meeting to view intelligence
             </div>
           )}

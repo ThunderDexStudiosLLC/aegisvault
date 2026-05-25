@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Clock, Lightbulb, MessageSquare, Image, FileText, Flag,
   Calendar, Filter, Search, Plus, ChevronDown, Tag,
 } from "lucide-react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { memories, tags as allTags } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 import type { MemoryEntry } from "@/types";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -43,6 +44,13 @@ export default function TimelinePage() {
   const [showAddMemory, setShowAddMemory] = useState(false);
   const [memoryList, setMemoryList] = useState<MemoryEntry[]>(memories);
   const [newMemory, setNewMemory] = useState({ title: "", content: "", type: "note" as MemoryEntry["type"], importance: "medium" as MemoryEntry["importance"] });
+  const { setState } = useOrb();
+
+  useEffect(() => {
+    setState("linking-memory");
+    const timer = setTimeout(() => setState("idle"), 3000);
+    return () => clearTimeout(timer);
+  }, [setState]);
 
   const filtered = memoryList.filter((m) => {
     if (filterType !== "all" && m.type !== filterType) return false;
@@ -77,15 +85,15 @@ export default function TimelinePage() {
   };
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Founder Memory Timeline</h1>
-          <p className="text-sm text-muted-foreground">Chronological record of ideas, decisions, conversations, and milestones</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Founder Memory Timeline</h1>
+          <p className="text-sm text-muted-foreground/70">Chronological record of ideas, decisions, conversations, and milestones</p>
         </div>
         <button
           onClick={() => setShowAddMemory(!showAddMemory)}
-          className="flex items-center gap-2 rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow"
+          className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white"
         >
           <Plus className="h-4 w-4" />
           Add Memory
@@ -93,7 +101,7 @@ export default function TimelinePage() {
       </div>
 
       {showAddMemory && (
-        <div className="glass rounded-xl p-6">
+        <div className="aegis-card rounded-xl p-6">
           <h2 className="mb-4 text-lg font-semibold text-foreground">Record New Memory</h2>
           <div className="grid grid-cols-2 gap-4">
             <input
@@ -101,13 +109,13 @@ export default function TimelinePage() {
               placeholder="Memory title..."
               value={newMemory.title}
               onChange={(e) => setNewMemory({ ...newMemory, title: e.target.value })}
-              className="h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+              className="h-10 rounded-lg border border-border/30 bg-background/50 px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
             />
             <div className="flex gap-3">
               <select
                 value={newMemory.type}
                 onChange={(e) => setNewMemory({ ...newMemory, type: e.target.value as MemoryEntry["type"] })}
-                className="h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
+                className="h-10 rounded-lg border border-border/30 bg-background/50 px-3 text-sm text-foreground"
               >
                 <option value="idea">Idea</option>
                 <option value="decision">Decision</option>
@@ -119,7 +127,7 @@ export default function TimelinePage() {
               <select
                 value={newMemory.importance}
                 onChange={(e) => setNewMemory({ ...newMemory, importance: e.target.value as MemoryEntry["importance"] })}
-                className="h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
+                className="h-10 rounded-lg border border-border/30 bg-background/50 px-3 text-sm text-foreground"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -133,10 +141,10 @@ export default function TimelinePage() {
             value={newMemory.content}
             onChange={(e) => setNewMemory({ ...newMemory, content: e.target.value })}
             rows={4}
-            className="mt-4 w-full rounded-lg border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="mt-4 w-full rounded-lg border border-border/30 bg-background/50 p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
           <div className="mt-4 flex gap-3">
-            <button onClick={handleAddMemory} className="rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow">
+            <button onClick={handleAddMemory} className="aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
               Save Memory
             </button>
             <button onClick={() => setShowAddMemory(false)} className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground">
@@ -155,13 +163,13 @@ export default function TimelinePage() {
             placeholder="Search memories by topic, person, project, or date..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Types</option>
           <option value="idea">Ideas</option>
@@ -174,7 +182,7 @@ export default function TimelinePage() {
         <select
           value={filterImportance}
           onChange={(e) => setFilterImportance(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Importance</option>
           <option value="critical">Critical</option>
@@ -201,7 +209,7 @@ export default function TimelinePage() {
               {entries.map((memory) => {
                 const Icon = typeIcons[memory.type] || FileText;
                 return (
-                  <div key={memory.id} className="glass glass-hover rounded-xl p-4 transition-all">
+                  <div key={memory.id} className="glass-interactive rounded-xl p-4 transition-all">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn("flex h-8 w-8 items-center justify-center rounded-lg border", typeColors[memory.type])}>

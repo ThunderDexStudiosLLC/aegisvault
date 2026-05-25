@@ -39,11 +39,11 @@ export default function RelationshipsPage() {
   const selected = relationships.find((r) => r.id === selectedId);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Relationship Intelligence</h1>
-          <p className="text-sm text-muted-foreground">Track strategic relationships across the ecosystem</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Relationship Intelligence</h1>
+          <p className="text-sm text-muted-foreground/70">Track strategic relationships across the ecosystem</p>
         </div>
       </div>
 
@@ -55,13 +55,13 @@ export default function RelationshipsPage() {
             placeholder="Search by name or company..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Types</option>
           <option value="investor">Investors</option>
@@ -119,7 +119,7 @@ export default function RelationshipsPage() {
 
         <div>
           {selected ? (
-            <div className="glass rounded-xl p-4 sticky top-24">
+            <div className="aegis-card rounded-xl p-4 sticky top-24">
               <div className="flex items-center gap-3 border-b border-border pb-3">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-electric/10 text-electric text-lg font-bold">
                   {selected.name.split(" ").map((n) => n[0]).join("")}
@@ -157,7 +157,7 @@ export default function RelationshipsPage() {
 
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Notes</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{selected.notes}</p>
+                  <p className="mt-1 text-sm text-muted-foreground/70">{selected.notes}</p>
                 </div>
 
                 <div>
@@ -174,9 +174,9 @@ export default function RelationshipsPage() {
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Communication History</p>
                     <div className="mt-2 space-y-2">
                       {selected.communicationHistory.map((comm) => (
-                        <div key={comm.id} className="rounded-lg border border-border p-2">
+                        <div key={comm.id} className="rounded-lg border border-border/20 p-2">
                           <div className="flex items-center gap-2">
-                            <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] text-muted-foreground">{comm.type}</span>
+                            <span className="rounded bg-white/[0.04] px-1.5 py-0.5 text-[9px] text-muted-foreground">{comm.type}</span>
                             <span className="text-[10px] text-muted-foreground">{formatDate(comm.date)}</span>
                           </div>
                           <p className="mt-1 text-xs font-medium text-foreground">{comm.subject}</p>
@@ -189,9 +189,9 @@ export default function RelationshipsPage() {
               </div>
             </div>
           ) : (
-            <div className="glass rounded-xl p-6 text-center">
+            <div className="aegis-card rounded-xl p-6 text-center">
               <Users className="mx-auto h-10 w-10 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">Select a relationship to view intelligence</p>
+              <p className="mt-3 text-sm text-muted-foreground/70">Select a relationship to view intelligence</p>
             </div>
           )}
         </div>

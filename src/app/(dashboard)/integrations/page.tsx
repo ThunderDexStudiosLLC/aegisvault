@@ -36,11 +36,11 @@ export default function IntegrationsPage() {
   const filtered = integrations.filter((i) => filterCategory === "all" || i.category === filterCategory);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Integrations</h1>
-          <p className="text-sm text-muted-foreground">Connect AegisVault with your ecosystem and third-party services</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Integrations</h1>
+          <p className="text-sm text-muted-foreground/70">Connect AegisVault with your ecosystem and third-party services</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export default function IntegrationsPage() {
           const StatusIcon = status.icon;
 
           return (
-            <div key={integration.id} className="glass glass-hover rounded-xl p-4 transition-all">
+            <div key={integration.id} className="glass-interactive rounded-xl p-4 transition-all">
               <div className="flex items-start justify-between">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-electric/10">
                   <Icon className="h-6 w-6 text-electric" />

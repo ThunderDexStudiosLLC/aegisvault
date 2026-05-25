@@ -49,11 +49,11 @@ export default function ActivityPage() {
   }, {});
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Activity Log</h1>
-          <p className="text-sm text-muted-foreground">Complete audit trail of all vault activity</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Activity Log</h1>
+          <p className="text-sm text-muted-foreground/70">Complete audit trail of all vault activity</p>
         </div>
       </div>
 
@@ -65,13 +65,13 @@ export default function ActivityPage() {
             placeholder="Search activity..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Types</option>
           <option value="document">Documents</option>
@@ -100,7 +100,7 @@ export default function ActivityPage() {
               {logs.map((log) => {
                 const Icon = entityIcons[log.entityType] || Activity;
                 return (
-                  <div key={log.id} className="glass glass-hover rounded-xl p-3 transition-all">
+                  <div key={log.id} className="glass-interactive rounded-xl p-3 transition-all">
                     <div className="flex items-start gap-3">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-electric/10">
                         <Icon className="h-4 w-4 text-electric" />
@@ -114,7 +114,7 @@ export default function ActivityPage() {
                         {log.details && <p className="mt-1 text-xs text-muted-foreground">{log.details}</p>}
                         <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
                           <span>{formatRelativeTime(log.timestamp)}</span>
-                          <span className="rounded bg-secondary px-1.5 py-0.5 uppercase">{log.entityType}</span>
+                          <span className="rounded bg-white/[0.04] px-1.5 py-0.5 uppercase">{log.entityType}</span>
                         </div>
                       </div>
                     </div>

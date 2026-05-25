@@ -56,15 +56,15 @@ export default function NotesPage() {
   };
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Secure Notes</h1>
-          <p className="text-sm text-muted-foreground">{notesList.length} encrypted notes in vault</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Secure Notes</h1>
+          <p className="text-sm text-muted-foreground/70">{notesList.length} encrypted notes in vault</p>
         </div>
         <button
           onClick={() => setShowNewNote(true)}
-          className="flex items-center gap-2 rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow"
+          className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white"
         >
           <Plus className="h-4 w-4" />
           New Note
@@ -81,7 +81,7 @@ export default function NotesPage() {
               placeholder="Search notes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+              className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
             />
           </div>
 
@@ -119,7 +119,7 @@ export default function NotesPage() {
         {/* Note Editor / Viewer */}
         <div className="col-span-2">
           {showNewNote ? (
-            <div className="glass rounded-xl p-6">
+            <div className="aegis-card rounded-xl p-6">
               <h2 className="mb-4 text-lg font-semibold text-foreground">Create New Note</h2>
               <div className="space-y-4">
                 <input
@@ -127,19 +127,19 @@ export default function NotesPage() {
                   placeholder="Note title..."
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+                  className="h-10 w-full rounded-lg border border-border/30 bg-background/50 px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
                 />
                 <textarea
                   placeholder="Start writing..."
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
                   rows={15}
-                  className="w-full rounded-lg border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+                  className="w-full rounded-lg border border-border/30 bg-background/50 p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-electric focus:outline-none"
                 />
                 <div className="flex gap-3">
                   <button
                     onClick={handleCreateNote}
-                    className="rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow"
+                    className="aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white"
                   >
                     Save Note
                   </button>
@@ -153,7 +153,7 @@ export default function NotesPage() {
               </div>
             </div>
           ) : selected ? (
-            <div className="glass rounded-xl p-6">
+            <div className="aegis-card rounded-xl p-6">
               <div className="flex items-start justify-between border-b border-border pb-4">
                 <div>
                   <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ export default function NotesPage() {
                   >
                     <Pin className="h-4 w-4" />
                   </button>
-                  <button className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground">
+                  <button className="rounded-lg p-2 text-muted-foreground hover:bg-white/[0.03] hover:text-foreground">
                     <Edit3 className="h-4 w-4" />
                   </button>
                 </div>
@@ -194,7 +194,7 @@ export default function NotesPage() {
               </div>
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+            <div className="flex h-64 items-center justify-center text-sm text-muted-foreground/70">
               Select a note to view
             </div>
           )}

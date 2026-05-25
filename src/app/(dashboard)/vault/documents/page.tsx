@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FileText, Image, FileCode, File, Upload, Filter, Search,
   Shield, Lock, Eye, Download, MoreVertical, Grid, List,
 } from "lucide-react";
 import { cn, formatRelativeTime, formatDate } from "@/lib/utils";
 import { documents, tags } from "@/data/demo";
+import { useOrb } from "@/contexts/OrbContext";
 import type { VaultDocument } from "@/types";
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -32,6 +33,13 @@ export default function DocumentsPage() {
   const [filterClassification, setFilterClassification] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showUpload, setShowUpload] = useState(false);
+  const { setState } = useOrb();
+
+  useEffect(() => {
+    setState("indexing");
+    const timer = setTimeout(() => setState("idle"), 3000);
+    return () => clearTimeout(timer);
+  }, [setState]);
 
   const filtered = documents.filter((doc) => {
     if (filterType !== "all" && doc.type !== filterType) return false;
@@ -41,15 +49,15 @@ export default function DocumentsPage() {
   });
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Secure Documents</h1>
-          <p className="text-sm text-muted-foreground">{documents.length} documents in vault</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">Secure Documents</h1>
+          <p className="text-sm text-muted-foreground/70">{documents.length} documents in vault</p>
         </div>
         <button
           onClick={() => setShowUpload(!showUpload)}
-          className="flex items-center gap-2 rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow"
+          className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white"
         >
           <Upload className="h-4 w-4" />
           Upload Document
@@ -57,13 +65,13 @@ export default function DocumentsPage() {
       </div>
 
       {showUpload && (
-        <div className="glass rounded-xl p-6">
+        <div className="aegis-card rounded-xl p-6">
           <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-electric-dim/30 p-8">
             <Upload className="mb-3 h-10 w-10 text-electric-dim" />
             <p className="text-sm font-medium text-foreground">Drop files here or click to upload</p>
             <p className="mt-1 text-xs text-muted-foreground">Supports PDF, images, markdown, documents &bull; Max 50MB</p>
             <div className="mt-4 flex gap-3">
-              <select className="rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground">
+              <select className="rounded-lg border border-border/30 bg-background/50 px-3 py-2 text-xs text-foreground">
                 <option>Internal</option>
                 <option>Confidential</option>
                 <option>Top Secret</option>
@@ -86,13 +94,13 @@ export default function DocumentsPage() {
             placeholder="Search documents..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
+            className="h-9 w-full rounded-lg border border-border/30 bg-background/50 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-electric focus:outline-none"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Types</option>
           <option value="pdf">PDF</option>
@@ -103,7 +111,7 @@ export default function DocumentsPage() {
         <select
           value={filterClassification}
           onChange={(e) => setFilterClassification(e.target.value)}
-          className="h-9 rounded-lg border border-border bg-background px-3 text-xs text-foreground"
+          className="h-9 rounded-lg border border-border/30 bg-background/50 px-3 text-xs text-foreground"
         >
           <option value="all">All Classifications</option>
           <option value="public">Public</option>
@@ -127,7 +135,7 @@ export default function DocumentsPage() {
           {filtered.map((doc) => {
             const Icon = typeIcons[doc.type] || File;
             return (
-              <div key={doc.id} className="glass glass-hover cursor-pointer rounded-xl p-4 transition-all">
+              <div key={doc.id} className="glass-interactive cursor-pointer rounded-xl p-4 transition-all">
                 <div className="flex items-start justify-between">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-electric/10">
                     <Icon className="h-5 w-5 text-electric" />
@@ -161,7 +169,7 @@ export default function DocumentsPage() {
           })}
         </div>
       ) : (
-        <div className="glass rounded-xl">
+        <div className="aegis-card rounded-xl">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted-foreground">

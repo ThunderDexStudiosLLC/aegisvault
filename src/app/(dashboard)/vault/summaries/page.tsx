@@ -3,7 +3,8 @@
 import { Brain, RefreshCw, FileText, Clock, Users, Briefcase, BarChart3 } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { aiSummaries } from "@/data/demo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useOrb } from "@/contexts/OrbContext";
 
 const typeConfig: Record<string, { icon: React.ElementType; label: string; color: string }> = {
   executive: { icon: Briefcase, label: "Executive Briefing", color: "text-electric" },
@@ -17,15 +18,22 @@ const typeConfig: Record<string, { icon: React.ElementType; label: string; color
 export default function SummariesPage() {
   const [selectedId, setSelectedId] = useState(aiSummaries[0]?.id || "");
   const selected = aiSummaries.find((s) => s.id === selectedId);
+  const { setState } = useOrb();
+
+  useEffect(() => {
+    setState("generating-summaries");
+    const timer = setTimeout(() => setState("idle"), 3000);
+    return () => clearTimeout(timer);
+  }, [setState]);
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="aegis-page-enter space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">AI Summaries</h1>
-          <p className="text-sm text-muted-foreground">AI-generated intelligence briefings across all vault data</p>
+          <h1 className="text-2xl font-bold text-foreground aegis-glow-text">AI Summaries</h1>
+          <p className="text-sm text-muted-foreground/70">AI-generated intelligence briefings across all vault data</p>
         </div>
-        <button className="flex items-center gap-2 rounded-lg bg-electric px-4 py-2 text-sm font-medium text-white hover:bg-electric-glow">
+        <button className="flex items-center gap-2 aegis-btn-primary rounded-lg px-4 py-2 text-sm font-medium text-white">
           <RefreshCw className="h-4 w-4" />
           Generate New Summary
         </button>
@@ -62,7 +70,7 @@ export default function SummariesPage() {
 
         <div className="col-span-2">
           {selected && (
-            <div className="glass rounded-xl p-6">
+            <div className="aegis-card rounded-xl p-6">
               <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground">{selected.title}</h2>
