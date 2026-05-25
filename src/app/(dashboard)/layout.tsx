@@ -8,6 +8,7 @@ import { MemoryProvider } from "@/contexts/MemoryContext";
 import { EcosystemProvider } from "@/contexts/EcosystemContext";
 import { FounderProvider } from "@/contexts/FounderContext";
 import { IdentityProvider } from "@/contexts/IdentityContext";
+import { GovernanceProvider } from "@/contexts/GovernanceContext";
 
 export default function DashboardLayout({
   children,
@@ -20,6 +21,7 @@ export default function DashboardLayout({
         <EcosystemProvider>
           <FounderProvider>
             <IdentityProvider>
+              <GovernanceProvider>
             <div className="flex min-h-screen relative">
               <AmbientEffects />
               <Sidebar />
@@ -28,6 +30,7 @@ export default function DashboardLayout({
                 <main className="flex-1 p-6 aegis-page-enter">{children}</main>
               </div>
             </div>
+              </GovernanceProvider>
             </IdentityProvider>
           </FounderProvider>
         </EcosystemProvider>

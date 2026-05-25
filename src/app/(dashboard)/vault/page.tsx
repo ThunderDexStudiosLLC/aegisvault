@@ -5,7 +5,7 @@ import {
   FileText, Clock, FolderKanban, Users, Brain, Activity,
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
   Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles, Crown,
-  Fingerprint, Key, Lock,
+  Fingerprint, Key, Lock, ShieldCheck, Bot, BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -18,6 +18,7 @@ import { useMemory } from "@/contexts/MemoryContext";
 import { useEcosystem } from "@/contexts/EcosystemContext";
 import { useFounder } from "@/contexts/FounderContext";
 import { useIdentity } from "@/contexts/IdentityContext";
+import { useGovernance } from "@/contexts/GovernanceContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -33,6 +34,7 @@ export default function VaultDashboard() {
   const ecosystem = useEcosystem();
   const founder = useFounder();
   const identity = useIdentity();
+  const governance = useGovernance();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -463,6 +465,48 @@ export default function VaultDashboard() {
                 </Link>
               ))}
             </div>
+          </div>
+
+          {/* Memory Governance */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <ShieldCheck className="h-4 w-4 text-violet-400/70" />
+                Memory Governance
+              </h3>
+              <Link href="/governance" className="text-xs text-violet-400/60 hover:text-violet-400 transition-colors">Open</Link>
+            </div>
+            {(() => {
+              const gStats = governance.getStats();
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-foreground">{gStats.totalMemories}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">GOVERNED</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-amber-400">{gStats.lockedMemories}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">LOCKED</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className={cn("text-lg font-bold", gStats.complianceScore >= 90 ? "text-success" : "text-warning")}>{gStats.complianceScore}%</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">COMPLIANCE</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2 rounded-lg p-2">
+                      <Bot className="h-3 w-3 text-purple-400/50 shrink-0" />
+                      <span className="text-xs text-foreground/50 flex-1">{gStats.aiAccessEvents} AI memory accesses</span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-lg p-2">
+                      <BookOpen className="h-3 w-3 text-electric/50 shrink-0" />
+                      <span className="text-xs text-foreground/50 flex-1">{gStats.founderZones} protection zones active</span>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           {/* Relationship Alerts */}

@@ -627,3 +627,99 @@ export interface SecurityPosture {
   lastAudit?: string;
   recommendations: string[];
 }
+
+/* ================================================================
+   SECURE AI MEMORY GOVERNANCE LAYER
+   ================================================================ */
+
+export type MemoryClassification = "public" | "internal" | "confidential" | "restricted" | "founder-only" | "legal-sensitive" | "infrastructure-sensitive";
+
+export interface GovernedMemory {
+  id: string;
+  title: string;
+  summary: string;
+  classification: MemoryClassification;
+  owner: string;
+  zone: string;
+  createdAt: string;
+  lastAccessed?: string;
+  accessCount: number;
+  aiAccessCount: number;
+  retentionPolicyId?: string;
+  expiresAt?: string;
+  locked: boolean;
+  redacted: boolean;
+  tags: string[];
+  linkedProductIds: string[];
+}
+
+export interface MemoryAccessRule {
+  id: string;
+  name: string;
+  description: string;
+  classification: MemoryClassification;
+  allowedRoles: string[];
+  allowedIdentities: string[];
+  aiAccess: "full" | "summary-only" | "metadata-only" | "denied";
+  recallLimit?: number;
+  contextualConditions?: string;
+  requiresMfa: boolean;
+  auditRequired: boolean;
+  active: boolean;
+}
+
+export interface MemoryRetentionPolicy {
+  id: string;
+  name: string;
+  description: string;
+  classification: MemoryClassification;
+  retentionDays: number | null;
+  autoArchive: boolean;
+  autoDelete: boolean;
+  legalHold: boolean;
+  archiveAfterDays?: number;
+  deleteAfterDays?: number;
+  continuityExempt: boolean;
+  active: boolean;
+}
+
+export interface MemoryAuditEntry {
+  id: string;
+  memoryId: string;
+  memoryTitle: string;
+  action: "access" | "ai-recall" | "classification-change" | "redaction" | "lock" | "unlock" | "archive" | "delete" | "export" | "share";
+  performedBy: string;
+  performedByType: "human" | "ai-agent" | "system";
+  classification: MemoryClassification;
+  timestamp: string;
+  details: string;
+  ipAddress?: string;
+  approved: boolean;
+}
+
+export interface FounderProtectionZone {
+  id: string;
+  name: string;
+  description: string;
+  classification: MemoryClassification;
+  memoryCount: number;
+  locked: boolean;
+  aiAccessPolicy: "denied" | "summary-only" | "metadata-only";
+  accessibleBy: string[];
+  emergencyUnlockContacts: string[];
+  createdAt: string;
+  lastModified: string;
+}
+
+export interface GovernanceStats {
+  totalMemories: number;
+  classificationBreakdown: Record<MemoryClassification, number>;
+  lockedMemories: number;
+  redactedMemories: number;
+  aiAccessEvents: number;
+  humanAccessEvents: number;
+  retentionPolicies: number;
+  expiringWithin30Days: number;
+  founderZones: number;
+  complianceScore: number;
+}
