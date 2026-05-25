@@ -1163,3 +1163,82 @@ export interface EncryptionStats {
   zeroTrustCompliance: number;
   keyHealthScore: number;
 }
+
+/* ================================================================
+   OPERATIONAL INTELLIGENCE TIMELINE & RECALL
+   ================================================================ */
+
+export type TimelineCategory = "decision" | "incident" | "workflow" | "access" | "milestone" | "ai-action" | "security" | "communication" | "governance" | "ecosystem";
+export type OpsMemoryType = "operational" | "executive" | "legal" | "infrastructure" | "communications" | "security" | "ai-activity" | "governance" | "strategic" | "founder-private";
+export type RecallScope = "related-events" | "incident-timeline" | "project-continuity" | "operational-history" | "linked-security" | "related-communications";
+
+export interface TimelineEvent {
+  id: string;
+  category: TimelineCategory;
+  memoryType: OpsMemoryType;
+  title: string;
+  description: string;
+  timestamp: string;
+  actor: string;
+  workspaceId: string;
+  severity: "info" | "warning" | "high" | "critical";
+  pinned: boolean;
+  encrypted: boolean;
+  linkedEventIds: string[];
+  tags: string[];
+  aiGenerated: boolean;
+  governanceCompliant: boolean;
+  auditLogged: boolean;
+}
+
+export interface ContinuityThread {
+  id: string;
+  title: string;
+  description: string;
+  category: TimelineCategory;
+  memoryType: OpsMemoryType;
+  status: "active" | "paused" | "resolved" | "archived";
+  startedAt: string;
+  lastUpdatedAt: string;
+  eventIds: string[];
+  owner: string;
+  priority: "low" | "medium" | "high" | "critical";
+  aiSummary: string;
+  unresolved: boolean;
+}
+
+export interface RecallQuery {
+  id: string;
+  scope: RecallScope;
+  query: string;
+  description: string;
+  resultCount: number;
+  lastExecutedAt: string;
+  executedBy: string;
+  aiAssisted: boolean;
+}
+
+export interface TimelineSnapshot {
+  id: string;
+  title: string;
+  capturedAt: string;
+  capturedBy: string;
+  eventCount: number;
+  threadCount: number;
+  coveragePeriod: string;
+  memoryTypes: OpsMemoryType[];
+  encrypted: boolean;
+}
+
+export interface TimelineStats {
+  totalEvents: number;
+  pinnedEvents: number;
+  activeThreads: number;
+  unresolvedThreads: number;
+  recallQueries: number;
+  snapshots: number;
+  eventsToday: number;
+  aiGeneratedEvents: number;
+  encryptedEvents: number;
+  categoryCounts: Record<TimelineCategory, number>;
+}

@@ -36,6 +36,7 @@ const navGroups: NavGroup[] = [
       { label: "Knowledge Graph", href: "/knowledge", icon: Share2 },
       { label: "AI Summaries", href: "/vault/summaries", icon: Brain },
       { label: "Memory Timeline", href: "/timeline", icon: Clock },
+      { label: "Ops Timeline", href: "/ops-timeline", icon: Activity },
     ],
   },
   {

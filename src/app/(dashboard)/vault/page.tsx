@@ -24,7 +24,8 @@ import { useContinuity } from "@/contexts/ContinuityContext";
 import { useIronFrame } from "@/contexts/IronFrameContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useEncryption } from "@/contexts/EncryptionContext";
-import { Layers, Lock as LockIcon } from "lucide-react";
+import { useTimeline } from "@/contexts/TimelineContext";
+import { Layers, Lock as LockIcon, Link2 } from "lucide-react";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -45,6 +46,7 @@ export default function VaultDashboard() {
   const ironframe = useIronFrame();
   const workspace = useWorkspace();
   const encryption = useEncryption();
+  const timeline = useTimeline();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -687,6 +689,37 @@ export default function VaultDashboard() {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Ops Timeline */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Link2 className="h-4 w-4 text-cyan-400/70" />
+                Ops Timeline
+              </h3>
+              <Link href="/ops-timeline" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">View all</Link>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-electric">{timeline.stats.totalEvents}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">EVENTS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-success">{timeline.stats.activeThreads}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">THREADS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className={cn("text-lg font-bold", timeline.stats.unresolvedThreads > 0 ? "text-amber-400" : "text-success")}>{timeline.stats.unresolvedThreads}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">UNRESOLVED</p>
+              </div>
+            </div>
+            {timeline.stats.unresolvedThreads > 0 && (
+              <div className="flex items-center gap-2 rounded-lg p-2 bg-amber-400/[0.03]">
+                <AlertTriangle className="h-3 w-3 text-amber-400/50 shrink-0" />
+                <span className="text-xs text-amber-400/70">{timeline.stats.unresolvedThreads} unresolved continuity threads</span>
+              </div>
+            )}
           </div>
 
           {/* Relationship Alerts */}
