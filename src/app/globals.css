@@ -602,3 +602,125 @@ body::after {
 .aegis-glow-text {
   text-shadow: 0 0 10px rgba(59,130,246,0.3), 0 0 30px rgba(59,130,246,0.1);
 }
+
+/* ================================================================
+   ENHANCED ANIMATIONS
+   ================================================================ */
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* ================================================================
+   GLASS INTERACTIVE CARDS
+   ================================================================ */
+
+.glass-interactive {
+  background: rgba(8, 12, 24, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.04);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-interactive:hover {
+  background: rgba(10, 15, 30, 0.6);
+  border-color: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.3), 0 0 20px -8px rgba(59, 130, 246, 0.04);
+  transform: translateY(-1px);
+}
+
+/* ================================================================
+   HOLOGRAPHIC SHIMMER
+   ================================================================ */
+
+.holo-shimmer {
+  position: relative;
+}
+
+.holo-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.03) 50%,
+    transparent 100%
+  );
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+
+/* ================================================================
+   SCROLLBAR STYLING
+   ================================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+/* ================================================================
+   CINEMATIC TRANSITIONS
+   ================================================================ */
+
+.transition-gpu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Focus ring for accessibility */
+.aegis-focus:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.4);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

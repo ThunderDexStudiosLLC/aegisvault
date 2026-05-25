@@ -13,29 +13,59 @@ import {
 import { cn } from "@/lib/utils";
 import { SuperintelligenceOrb } from "@/components/aegis/SuperintelligenceOrb";
 
-const navItems = [
-  { label: "Dashboard", href: "/vault", icon: LayoutDashboard },
-  { label: "Documents", href: "/vault/documents", icon: FileText },
-  { label: "Secure Notes", href: "/notes", icon: Shield },
-  { label: "Memory Engine", href: "/memory", icon: Cpu },
-  { label: "Ecosystem Intel", href: "/ecosystem", icon: Globe },
-  { label: "Founder Command", href: "/founder", icon: Crown },
-  { label: "Identity & Access", href: "/identity", icon: Fingerprint },
-  { label: "Memory Governance", href: "/governance", icon: ShieldCheck },
-  { label: "Continuity", href: "/continuity", icon: Server },
-  { label: "IronFrame Security", href: "/security", icon: Radar },
-  { label: "Memory Timeline", href: "/timeline", icon: Clock },
-  { label: "Projects", href: "/projects", icon: FolderKanban },
-  { label: "AI Search", href: "/search", icon: Search },
-  { label: "Knowledge Graph", href: "/knowledge", icon: Share2 },
-  { label: "Relationships", href: "/relationships", icon: Users },
-  { label: "Meetings", href: "/meetings", icon: Calendar },
-  { label: "AI Summaries", href: "/vault/summaries", icon: Brain },
-  { label: "Decisions", href: "/decisions", icon: Lightbulb },
-  { label: "Communications", href: "/communications", icon: MessageSquare },
-  { label: "Activity Log", href: "/activity", icon: Activity },
-  { label: "Integrations", href: "/integrations", icon: Plug },
-  { label: "Settings", href: "/settings", icon: Settings },
+interface NavGroup {
+  label: string;
+  items: { label: string; href: string; icon: React.ElementType }[];
+}
+
+const navGroups: NavGroup[] = [
+  {
+    label: "Core",
+    items: [
+      { label: "Dashboard", href: "/vault", icon: LayoutDashboard },
+      { label: "Documents", href: "/vault/documents", icon: FileText },
+      { label: "Secure Notes", href: "/notes", icon: Shield },
+      { label: "AI Search", href: "/search", icon: Search },
+    ],
+  },
+  {
+    label: "Intelligence",
+    items: [
+      { label: "Memory Engine", href: "/memory", icon: Cpu },
+      { label: "Ecosystem Intel", href: "/ecosystem", icon: Globe },
+      { label: "Knowledge Graph", href: "/knowledge", icon: Share2 },
+      { label: "AI Summaries", href: "/vault/summaries", icon: Brain },
+      { label: "Memory Timeline", href: "/timeline", icon: Clock },
+    ],
+  },
+  {
+    label: "Command",
+    items: [
+      { label: "Founder Command", href: "/founder", icon: Crown },
+      { label: "Decisions", href: "/decisions", icon: Lightbulb },
+      { label: "Projects", href: "/projects", icon: FolderKanban },
+    ],
+  },
+  {
+    label: "Security",
+    items: [
+      { label: "IronFrame Security", href: "/security", icon: Radar },
+      { label: "Identity & Access", href: "/identity", icon: Fingerprint },
+      { label: "Memory Governance", href: "/governance", icon: ShieldCheck },
+      { label: "Continuity", href: "/continuity", icon: Server },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { label: "Communications", href: "/communications", icon: MessageSquare },
+      { label: "Relationships", href: "/relationships", icon: Users },
+      { label: "Meetings", href: "/meetings", icon: Calendar },
+      { label: "Activity Log", href: "/activity", icon: Activity },
+      { label: "Integrations", href: "/integrations", icon: Plug },
+      { label: "Settings", href: "/settings", icon: Settings },
+    ],
+  },
 ];
 
 export function Sidebar() {
@@ -49,7 +79,7 @@ export function Sidebar() {
         collapsed ? "w-16" : "w-60"
       )}
     >
-      {/* Logo Area */}
+      {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b border-border/50 px-4">
         {!collapsed && (
           <Link href="/vault" className="flex items-center gap-3">
@@ -71,7 +101,7 @@ export function Sidebar() {
         )}
       </div>
 
-      {/* Orb Section */}
+      {/* Orb */}
       {!collapsed && (
         <div className="flex flex-col items-center py-4 border-b border-border/30">
           <SuperintelligenceOrb size="md" />
@@ -89,45 +119,42 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-2 py-2">
-        <div className="space-y-0.5">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/vault" && pathname.startsWith(item.href));
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "aegis-nav-item flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200",
-                  isActive
-                    ? "aegis-nav-active text-electric-glow"
-                    : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
-                  collapsed && "justify-center px-2"
-                )}
-                title={collapsed ? item.label : undefined}
-              >
-                <Icon className={cn("h-4 w-4 shrink-0", isActive && "drop-shadow-[0_0_4px_rgba(59,130,246,0.5)]")} />
-                {!collapsed && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
-        </div>
+        {navGroups.map((group) => (
+          <div key={group.label} className="mb-3">
+            {!collapsed && (
+              <p className="px-3 py-1 text-[9px] font-mono uppercase tracking-[0.15em] text-muted-foreground/25">
+                {group.label}
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {group.items.map((item) => {
+                const isActive = pathname === item.href || (item.href !== "/vault" && pathname.startsWith(item.href));
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "aegis-nav-item flex items-center gap-3 rounded-lg px-3 py-1.5 text-[13px] transition-all duration-200",
+                      isActive
+                        ? "aegis-nav-active text-electric-glow"
+                        : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
+                      collapsed && "justify-center px-2"
+                    )}
+                    title={collapsed ? item.label : undefined}
+                  >
+                    <Icon className={cn("h-4 w-4 shrink-0", isActive && "drop-shadow-[0_0_4px_rgba(59,130,246,0.5)]")} />
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
       <div className="border-t border-border/30 p-2">
-        {!collapsed && (
-          <Link
-            href="/vault"
-            className="mb-1 flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-white/[0.03] hover:text-foreground transition-colors"
-          >
-            <Bell className="h-4 w-4" />
-            <span>Notifications</span>
-            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-electric/80 text-[10px] font-bold text-white shadow-[0_0_8px_rgba(59,130,246,0.4)]">
-              3
-            </span>
-          </Link>
-        )}
         {!collapsed && (
           <div className="mx-3 mb-2 flex items-center gap-2 rounded-md bg-electric/5 px-2 py-1.5">
             <Zap className="h-3 w-3 text-electric/60" />
