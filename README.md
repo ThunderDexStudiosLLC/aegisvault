@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AegisVault
+
+AI-native secure memory, knowledge, document, and operational intelligence vault.
+
+**By IronReserve Holdings / KahmannAI Ecosystem**
+
+## Overview
+
+AegisVault is a secure operational intelligence vault for founders, AI-native companies, teams, and ecosystems. It combines secure document storage, operational memory, knowledge management, AI-assisted retrieval, relationship intelligence, founder memory, timeline reconstruction, ecosystem knowledge mapping, contextual recall, and secure intelligence organization.
+
+## Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Icons:** Lucide React
+- **Architecture:** Vercel-ready deployment
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to access the vault.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Core Modules
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Module | Route | Description |
+|--------|-------|-------------|
+| Dashboard | `/vault` | Operational intelligence overview with AI briefings |
+| Documents | `/vault/documents` | Secure document storage with classification levels |
+| Secure Notes | `/notes` | Encrypted notes with pinning and search |
+| Memory Timeline | `/timeline` | Chronological founder memory reconstruction |
+| Projects | `/projects` | Project intelligence with progress tracking |
+| AI Search | `/search` | Natural language retrieval across all vault data |
+| Knowledge Graph | `/knowledge` | Visual relationship mapping between entities |
+| Relationships | `/relationships` | Strategic relationship intelligence tracking |
+| Meetings | `/meetings` | AI-powered meeting summaries and follow-ups |
+| AI Summaries | `/vault/summaries` | Generated intelligence briefings |
+| Decisions | `/decisions` | Decision memory with rationale tracking |
+| Communications | `/communications` | Searchable communication archive |
+| Activity Log | `/activity` | Complete audit trail |
+| Integrations | `/integrations` | Ecosystem and third-party connections |
+| Settings | `/settings` | Profile, security, notifications, API keys |
+| Login | `/login` | Secure authentication |
 
-## Learn More
+## User Roles
 
-To learn more about Next.js, take a look at the following resources:
+- Founder
+- Executive
+- Operations
+- Analyst
+- Viewer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Ecosystem Integration Placeholders
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- AegisOSAI
+- Aegis Core
+- ForgeOps AI
+- SignalDesk
+- CallAxisAI
+- Founder OS
+- Google Drive / OneDrive / Dropbox
+- Local AI Indexing / OCR / Speech-to-Text
+- Vector Embeddings
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ThunderDexStudiosLLC/aegisvault)
