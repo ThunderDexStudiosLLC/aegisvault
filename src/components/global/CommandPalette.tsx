@@ -58,6 +58,7 @@ export function CommandPalette() {
     { id: "nav-workspaces", label: "Workspaces", category: "navigation", icon: Layers, action: () => nav("/workspaces") },
     { id: "nav-encryption", label: "Encryption & Trust", category: "navigation", icon: Lock, action: () => nav("/encryption") },
     { id: "nav-ops-timeline", label: "Ops Timeline & Recall", category: "navigation", icon: Clock, action: () => nav("/ops-timeline") },
+    { id: "nav-console", label: "Enterprise Console", category: "navigation", icon: Activity, action: () => nav("/console") },
     // AI Actions
     { id: "ai-recall", label: "Quick Memory Recall", category: "ai", icon: Bot, description: "AI-powered contextual memory search", action: () => { setState("searching"); nav("/memory"); } },
     { id: "ai-summary", label: "Generate Executive Briefing", category: "ai", icon: Brain, description: "AI-generated operational summary", action: () => { setState("generating-summaries"); nav("/vault/summaries"); } },

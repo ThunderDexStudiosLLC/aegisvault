@@ -1242,3 +1242,50 @@ export interface TimelineStats {
   encryptedEvents: number;
   categoryCounts: Record<TimelineCategory, number>;
 }
+
+/* ================================================================
+   ENTERPRISE CONSOLE
+   ================================================================ */
+
+export type ConsoleModuleId = "security" | "identity" | "workspaces" | "ai-governance" | "timeline" | "trust" | "continuity" | "audit" | "incidents" | "ecosystem";
+export type ConsoleModuleStatus = "operational" | "degraded" | "warning" | "critical" | "offline";
+
+export interface ConsoleModule {
+  id: ConsoleModuleId;
+  name: string;
+  status: ConsoleModuleStatus;
+  score: number;
+  activeAlerts: number;
+  lastChecked: string;
+  description: string;
+}
+
+export interface ConsoleCommand {
+  id: string;
+  label: string;
+  description: string;
+  category: "security" | "identity" | "governance" | "continuity" | "audit" | "workspace" | "ai";
+  severity: "standard" | "elevated" | "critical";
+  requiresConfirmation: boolean;
+}
+
+export interface LiveStatusMetric {
+  id: string;
+  label: string;
+  value: number | string;
+  unit?: string;
+  trend: "up" | "down" | "stable";
+  status: "healthy" | "warning" | "critical";
+}
+
+export interface ConsoleStats {
+  overallPosture: "secure" | "monitoring" | "elevated" | "critical";
+  overallScore: number;
+  modulesOperational: number;
+  totalModules: number;
+  activeIncidents: number;
+  activeSessions: number;
+  activeAiAgents: number;
+  pendingActions: number;
+  lastFullAudit: string;
+}
