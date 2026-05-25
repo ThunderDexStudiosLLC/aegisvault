@@ -1,0 +1,1 @@
+# AegisVault\n\nAI-native secure memory, knowledge, document, and operational intelligence vault.\n\nBy IronReserve Holdings / KahmannAI Ecosystem
