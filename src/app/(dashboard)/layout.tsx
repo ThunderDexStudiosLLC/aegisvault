@@ -6,6 +6,7 @@ import { AmbientEffects } from "@/components/aegis/AmbientEffects";
 import { OrbProvider } from "@/contexts/OrbContext";
 import { MemoryProvider } from "@/contexts/MemoryContext";
 import { EcosystemProvider } from "@/contexts/EcosystemContext";
+import { FounderProvider } from "@/contexts/FounderContext";
 
 export default function DashboardLayout({
   children,
@@ -16,14 +17,16 @@ export default function DashboardLayout({
     <OrbProvider>
       <MemoryProvider>
         <EcosystemProvider>
-          <div className="flex min-h-screen relative">
-            <AmbientEffects />
-            <Sidebar />
-            <div className="flex flex-1 flex-col pl-60 relative z-10">
-              <Header />
-              <main className="flex-1 p-6 aegis-page-enter">{children}</main>
+          <FounderProvider>
+            <div className="flex min-h-screen relative">
+              <AmbientEffects />
+              <Sidebar />
+              <div className="flex flex-1 flex-col pl-60 relative z-10">
+                <Header />
+                <main className="flex-1 p-6 aegis-page-enter">{children}</main>
+              </div>
             </div>
-          </div>
+          </FounderProvider>
         </EcosystemProvider>
       </MemoryProvider>
     </OrbProvider>

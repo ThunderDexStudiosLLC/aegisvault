@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import {
   FileText, Clock, FolderKanban, Users, Brain, Activity,
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
-  Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles,
+  Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles, Crown,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -15,6 +15,7 @@ import {
 import { useOrb } from "@/contexts/OrbContext";
 import { useMemory } from "@/contexts/MemoryContext";
 import { useEcosystem } from "@/contexts/EcosystemContext";
+import { useFounder } from "@/contexts/FounderContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -28,6 +29,7 @@ export default function VaultDashboard() {
   const { setState } = useOrb();
   const memoryEngine = useMemory();
   const ecosystem = useEcosystem();
+  const founder = useFounder();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -331,6 +333,48 @@ export default function VaultDashboard() {
                 </Link>
               ))}
             </div>
+          </div>
+
+          {/* Founder Command */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Crown className="h-4 w-4 text-amber-400/70" />
+                Founder Command
+              </h3>
+              <Link href="/founder" className="text-xs text-amber-400/60 hover:text-amber-400 transition-colors">Open</Link>
+            </div>
+            {(() => {
+              const fStats = founder.getFounderStats();
+              const critical = founder.getCriticalItems();
+              return (
+                <>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-warning">{fStats.unresolvedPriorities}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">UNRESOLVED</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-foreground">{fStats.activeResurfaces}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">RESURFACES</p>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                      <p className="text-lg font-bold text-amber-400">{fStats.pendingDecisions}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground/40">PENDING</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    {critical.resurfaces.slice(0, 3).map((r) => (
+                      <Link key={r.id} href="/founder" className="flex items-center gap-2 rounded-lg p-2 hover:bg-white/[0.03] transition-colors">
+                        <AlertTriangle className="h-3 w-3 text-warning/50 shrink-0" />
+                        <span className="text-xs text-foreground/70 truncate flex-1">{r.title}</span>
+                        <span className="text-[9px] text-muted-foreground/30">{r.daysSinceOriginal}d</span>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           {/* Memory Engine Status */}

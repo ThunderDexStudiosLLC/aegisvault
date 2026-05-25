@@ -397,3 +397,105 @@ export interface EcosystemGraphNode {
   status: string;
   connections: string[];
 }
+
+/* ================================================================
+   FOUNDER COMMAND MEMORY LAYER
+   ================================================================ */
+
+export type FounderSurfaceType =
+  | "unresolved-priority"
+  | "forgotten-discussion"
+  | "linked-opportunity"
+  | "paused-project"
+  | "incomplete-workflow"
+  | "stale-relationship"
+  | "strategic-continuity";
+
+export interface FounderDigest {
+  id: string;
+  date: string;
+  greeting: string;
+  prioritySummary: string;
+  unresolvedCount: number;
+  newMemories: number;
+  ecosystemAlerts: number;
+  sections: FounderDigestSection[];
+  generatedAt: string;
+}
+
+export interface FounderDigestSection {
+  id: string;
+  title: string;
+  type: "priorities" | "decisions" | "relationships" | "ecosystem" | "continuity";
+  items: FounderDigestItem[];
+}
+
+export interface FounderDigestItem {
+  id: string;
+  content: string;
+  importance: "low" | "medium" | "high" | "critical";
+  relatedMemoryIds: string[];
+  relatedProductIds?: string[];
+  actionRequired: boolean;
+  timestamp?: string;
+}
+
+export interface StrategicResurface {
+  id: string;
+  type: FounderSurfaceType;
+  title: string;
+  reason: string;
+  context: string;
+  originalMemoryId: string;
+  relatedMemoryIds: string[];
+  relatedProductIds: string[];
+  surfacedAt: string;
+  originalDate: string;
+  daysSinceOriginal: number;
+  urgency: "low" | "medium" | "high" | "critical";
+  dismissed: boolean;
+}
+
+export interface ContinuityReminder {
+  id: string;
+  title: string;
+  description: string;
+  category: "project" | "relationship" | "decision" | "workflow" | "strategic";
+  linkedMemoryIds: string[];
+  linkedProductIds: string[];
+  lastActivityDate: string;
+  daysSinceActivity: number;
+  suggestedAction: string;
+  priority: "low" | "medium" | "high" | "critical";
+  status: "active" | "snoozed" | "resolved";
+}
+
+export interface FounderDecisionLog {
+  id: string;
+  title: string;
+  decision: string;
+  rationale: string;
+  context: string;
+  madeAt: string;
+  impact: "low" | "medium" | "high" | "critical";
+  status: "active" | "superseded" | "reversed" | "pending-review";
+  linkedMemoryIds: string[];
+  linkedProductIds: string[];
+  linkedPeople: string[];
+  outcome?: string;
+  reviewDate?: string;
+}
+
+export interface ExecutiveContinuitySummary {
+  id: string;
+  title: string;
+  timeRange: { start: string; end: string };
+  narrative: string;
+  keyDecisions: string[];
+  unresolvedItems: string[];
+  strategicShifts: string[];
+  relationshipChanges: string[];
+  ecosystemUpdates: string[];
+  confidence: number;
+  generatedAt: string;
+}
