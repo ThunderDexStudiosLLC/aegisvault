@@ -23,7 +23,8 @@ import { useGovernance } from "@/contexts/GovernanceContext";
 import { useContinuity } from "@/contexts/ContinuityContext";
 import { useIronFrame } from "@/contexts/IronFrameContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { Layers } from "lucide-react";
+import { useEncryption } from "@/contexts/EncryptionContext";
+import { Layers, Lock as LockIcon } from "lucide-react";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -43,6 +44,7 @@ export default function VaultDashboard() {
   const continuity = useContinuity();
   const ironframe = useIronFrame();
   const workspace = useWorkspace();
+  const encryption = useEncryption();
   const memoryStats = memoryEngine.getStats();
   const ecoHealth = ecosystem.getEcosystemHealth();
   const ecoProducts = ecosystem.getAllProducts();
@@ -645,6 +647,45 @@ export default function VaultDashboard() {
                 <Shield className="h-3 w-3 text-success/50 shrink-0" />
                 <span className="text-xs text-foreground/50">{workspace.stats.governanceCompliance}% governance compliance</span>
               </div>
+            </div>
+          </div>
+
+          {/* Encryption & Trust */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <LockIcon className="h-4 w-4 text-electric/70" />
+                Encryption
+              </h3>
+              <Link href="/encryption" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">Manage</Link>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-electric">{encryption.stats.encryptionCoverage}%</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">COVERAGE</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className={cn("text-lg font-bold", encryption.stats.overallTrustScore >= 85 ? "text-success" : "text-amber-400")}>{encryption.stats.overallTrustScore}%</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">TRUST</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-emerald-400">{encryption.stats.activeKeys}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">KEYS</p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              {encryption.stats.highRiskSessions > 0 && (
+                <div className="flex items-center gap-2 rounded-lg p-2 bg-destructive/[0.03]">
+                  <AlertTriangle className="h-3 w-3 text-destructive/50 shrink-0" />
+                  <span className="text-xs text-destructive/70">{encryption.stats.highRiskSessions} high-risk session(s)</span>
+                </div>
+              )}
+              {encryption.stats.rotationsDue > 0 && (
+                <div className="flex items-center gap-2 rounded-lg p-2 bg-warning/[0.03]">
+                  <RefreshCw className="h-3 w-3 text-warning/50 shrink-0" />
+                  <span className="text-xs text-warning/70">{encryption.stats.rotationsDue} key rotation(s) due</span>
+                </div>
+              )}
             </div>
           </div>
 

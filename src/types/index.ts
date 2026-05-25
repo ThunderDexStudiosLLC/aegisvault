@@ -1048,3 +1048,118 @@ export interface WorkspaceStats {
   workspacesInLockdown: number;
   governanceCompliance: number;
 }
+
+/* ================================================================
+   ENCRYPTION & TRUST INFRASTRUCTURE
+   ================================================================ */
+
+export type EncryptionAlgorithm = "AES-256-GCM" | "AES-256-CBC" | "ChaCha20-Poly1305" | "RSA-4096" | "Ed25519" | "X25519";
+export type KeyType = "master" | "workspace" | "field" | "backup" | "session" | "ai-memory" | "audit" | "recovery";
+export type KeyStatus = "active" | "rotating" | "expired" | "revoked" | "compromised";
+export type DeviceTrustLevel = "trusted" | "verified" | "untrusted" | "blocked";
+export type SessionRisk = "low" | "medium" | "high" | "critical";
+export type LockdownLevel = "none" | "partial" | "full" | "emergency";
+
+export interface EncryptionKey {
+  id: string;
+  name: string;
+  type: KeyType;
+  algorithm: EncryptionAlgorithm;
+  status: KeyStatus;
+  createdAt: string;
+  lastRotatedAt: string;
+  expiresAt: string;
+  rotationDueDays: number;
+  bitStrength: number;
+  usageCount: number;
+  scope: string;
+  derivedFrom?: string;
+  exposureRisk: "none" | "low" | "medium" | "high";
+  hardwareProtected: boolean;
+}
+
+export interface TrustInfraDevice {
+  id: string;
+  name: string;
+  type: "desktop" | "mobile" | "tablet" | "server" | "hardware-key";
+  trustLevel: DeviceTrustLevel;
+  owner: string;
+  os: string;
+  browser?: string;
+  lastSeen: string;
+  firstSeen: string;
+  location: string;
+  ipAddress: string;
+  trustScore: number;
+  biometricCapable: boolean;
+  hardwareKeyBound: boolean;
+  fingerprint: string;
+}
+
+export interface ActiveSession {
+  id: string;
+  userId: string;
+  userName: string;
+  deviceId: string;
+  deviceName: string;
+  startedAt: string;
+  lastActivity: string;
+  expiresAt: string;
+  risk: SessionRisk;
+  location: string;
+  ipAddress: string;
+  verified: boolean;
+  stepUpAuth: boolean;
+  mfaVerified: boolean;
+  continuousVerification: boolean;
+  riskFactors: string[];
+}
+
+export interface SecurityIntelEvent {
+  id: string;
+  type: "suspicious-login" | "impossible-travel" | "stale-permission" | "credential-exposure" | "anomalous-behavior" | "ai-misuse" | "brute-force" | "privilege-escalation";
+  severity: "info" | "warning" | "high" | "critical";
+  title: string;
+  description: string;
+  actor?: string;
+  location?: string;
+  timestamp: string;
+  status: "detected" | "investigating" | "mitigated" | "resolved" | "false-positive";
+  automated: boolean;
+  relatedEntities: string[];
+}
+
+export interface TrustScore {
+  category: string;
+  score: number;
+  maxScore: number;
+  trend: "improving" | "stable" | "declining";
+  factors: { name: string; impact: "positive" | "negative" | "neutral"; detail: string }[];
+}
+
+export interface LockdownState {
+  level: LockdownLevel;
+  activatedAt?: string;
+  activatedBy?: string;
+  reason?: string;
+  affectedWorkspaces: string[];
+  revokedSessions: number;
+  frozenAiAgents: number;
+  frozenCredentials: number;
+  estimatedResolution?: string;
+}
+
+export interface EncryptionStats {
+  totalKeys: number;
+  activeKeys: number;
+  rotationsDue: number;
+  trustedDevices: number;
+  activeSessions: number;
+  highRiskSessions: number;
+  overallTrustScore: number;
+  encryptionCoverage: number;
+  securityEvents24h: number;
+  lockdownLevel: LockdownLevel;
+  zeroTrustCompliance: number;
+  keyHealthScore: number;
+}

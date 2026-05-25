@@ -12,6 +12,7 @@ import { GovernanceProvider } from "@/contexts/GovernanceContext";
 import { ContinuityProvider } from "@/contexts/ContinuityContext";
 import { IronFrameProvider } from "@/contexts/IronFrameContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
+import { EncryptionProvider } from "@/contexts/EncryptionContext";
 import { CommandPalette } from "@/components/global/CommandPalette";
 
 export default function DashboardLayout({
@@ -29,6 +30,7 @@ export default function DashboardLayout({
                 <ContinuityProvider>
                   <IronFrameProvider>
                     <WorkspaceProvider>
+                      <EncryptionProvider>
             <div className="flex min-h-screen relative">
               <AmbientEffects />
               <Sidebar />
@@ -38,6 +40,7 @@ export default function DashboardLayout({
                 <CommandPalette />
               </div>
             </div>
+                      </EncryptionProvider>
                     </WorkspaceProvider>
                   </IronFrameProvider>
                 </ContinuityProvider>
