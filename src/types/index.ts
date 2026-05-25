@@ -296,3 +296,104 @@ export interface MemoryGraphNode {
   importance: number;
   connections: string[];
 }
+
+/* ================================================================
+   ECOSYSTEM INTELLIGENCE LINKING
+   ================================================================ */
+
+export type EcosystemProductStatus = "active" | "development" | "planning" | "beta" | "paused";
+
+export interface EcosystemProduct {
+  id: string;
+  name: string;
+  shortName: string;
+  description: string;
+  category: "platform" | "intelligence" | "operations" | "finance" | "communication" | "civic" | "development";
+  status: EcosystemProductStatus;
+  color: string;
+  icon: string;
+  version?: string;
+  health: number;
+  dependencies: string[];
+  dependents: string[];
+  sharedCapabilities: string[];
+  memoryIds: string[];
+  workflowIds: string[];
+  teamMembers: string[];
+  dataFlows: EcosystemDataFlow[];
+  metrics: EcosystemProductMetrics;
+}
+
+export interface EcosystemDataFlow {
+  id: string;
+  sourceProductId: string;
+  targetProductId: string;
+  dataType: "memory" | "workflow" | "intelligence" | "events" | "auth" | "billing" | "analytics";
+  direction: "inbound" | "outbound" | "bidirectional";
+  status: "active" | "planned" | "paused";
+  description: string;
+  volumePerDay?: number;
+}
+
+export interface EcosystemProductMetrics {
+  memoryCount: number;
+  workflowCount: number;
+  activeUsers?: number;
+  uptime?: number;
+  lastSync?: string;
+}
+
+export interface EcosystemLink {
+  id: string;
+  sourceProductId: string;
+  targetProductId: string;
+  linkType: "dependency" | "integration" | "data-flow" | "shared-infra" | "api" | "memory-sync";
+  strength: number;
+  status: "active" | "planned" | "deprecated";
+  description: string;
+}
+
+export interface EcosystemWorkflow {
+  id: string;
+  name: string;
+  description: string;
+  productIds: string[];
+  steps: EcosystemWorkflowStep[];
+  status: "active" | "draft" | "deprecated";
+  frequency: "real-time" | "hourly" | "daily" | "weekly" | "on-demand";
+  lastExecuted?: string;
+  memoryIds: string[];
+}
+
+export interface EcosystemWorkflowStep {
+  order: number;
+  productId: string;
+  action: string;
+  dataIn?: string;
+  dataOut?: string;
+}
+
+export interface EcosystemRecommendation {
+  id: string;
+  type: "link-suggestion" | "dependency-alert" | "optimization" | "knowledge-gap" | "workflow-improvement";
+  title: string;
+  description: string;
+  confidence: number;
+  relatedProducts: string[];
+  relatedMemories: string[];
+  priority: "low" | "medium" | "high" | "critical";
+  actionable: boolean;
+}
+
+export interface EcosystemGraphNode {
+  id: string;
+  label: string;
+  type: "product" | "capability" | "workflow" | "data-flow";
+  category?: string;
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  status: string;
+  connections: string[];
+}

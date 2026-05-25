@@ -14,6 +14,7 @@ import {
 } from "@/data/demo";
 import { useOrb } from "@/contexts/OrbContext";
 import { useMemory } from "@/contexts/MemoryContext";
+import { useEcosystem } from "@/contexts/EcosystemContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -26,7 +27,10 @@ export default function VaultDashboard() {
   const [activeTab, setActiveTab] = useState<"briefing" | "activity" | "alerts">("briefing");
   const { setState } = useOrb();
   const memoryEngine = useMemory();
+  const ecosystem = useEcosystem();
   const memoryStats = memoryEngine.getStats();
+  const ecoHealth = ecosystem.getEcosystemHealth();
+  const ecoProducts = ecosystem.getAllProducts();
   const pinnedMemories = memoryEngine.getPinnedMemories().slice(0, 3);
   const executiveBriefing = aiSummaries.find((s) => s.type === "executive");
   const criticalDecisions = decisions.filter((d) => d.impact === "critical" || d.impact === "high");
@@ -291,6 +295,40 @@ export default function VaultDashboard() {
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Ecosystem Intelligence */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <GitBranch className="h-4 w-4 text-electric/70" />
+                Ecosystem Intel
+              </h3>
+              <Link href="/ecosystem" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">Explore</Link>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-foreground">{ecoProducts.length}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">PRODUCTS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-foreground">{ecoHealth.activeLinks}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">LINKS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-success">{Math.round(ecoHealth.overall * 100)}%</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">HEALTH</p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              {ecoProducts.slice(0, 5).map((product) => (
+                <Link key={product.id} href="/ecosystem" className="flex items-center gap-2 rounded-lg p-2 hover:bg-white/[0.03] transition-colors">
+                  <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: product.color }} />
+                  <span className="text-xs text-foreground/70 truncate flex-1">{product.shortName}</span>
+                  <span className={cn("text-[9px]", product.status === "active" ? "text-success/50" : "text-muted-foreground/30")}>{product.status}</span>
+                </Link>
               ))}
             </div>
           </div>
