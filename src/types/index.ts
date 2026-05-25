@@ -201,3 +201,98 @@ export interface Integration {
   status: "connected" | "available" | "coming-soon";
   category: "ecosystem" | "storage" | "ai" | "communication";
 }
+
+/* ================================================================
+   PERSISTENT MEMORY ENGINE
+   ================================================================ */
+
+export type MemoryType =
+  | "founder-memory"
+  | "project-memory"
+  | "workflow-memory"
+  | "meeting-summary"
+  | "communication"
+  | "document"
+  | "sop"
+  | "operational-log"
+  | "strategic-note"
+  | "relationship-intelligence";
+
+export type MemoryStatus = "active" | "pinned" | "archived";
+
+export interface MemoryNode {
+  id: string;
+  type: MemoryType;
+  title: string;
+  content: string;
+  summary: string;
+  createdAt: string;
+  updatedAt: string;
+  accessedAt: string;
+  accessCount: number;
+  importance: number;
+  status: MemoryStatus;
+  tags: Tag[];
+  linkedMemories: string[];
+  linkedPeople: string[];
+  linkedProjects: string[];
+  source?: string;
+  embeddings?: number[];
+  clusterId?: string;
+  contextualAnchors: ContextualAnchor[];
+}
+
+export interface ContextualAnchor {
+  type: "person" | "project" | "date" | "decision" | "event" | "system";
+  value: string;
+  strength: number;
+}
+
+export interface MemoryCluster {
+  id: string;
+  label: string;
+  description: string;
+  memoryIds: string[];
+  centroidTags: string[];
+  coherence: number;
+  createdAt: string;
+}
+
+export interface MemoryLink {
+  id: string;
+  sourceId: string;
+  targetId: string;
+  relationship: "related" | "caused-by" | "leads-to" | "contradicts" | "supports" | "references" | "evolved-from";
+  strength: number;
+  createdAt: string;
+  context?: string;
+}
+
+export interface MemorySummary {
+  id: string;
+  title: string;
+  content: string;
+  memoryIds: string[];
+  generatedAt: string;
+  timeRange: { start: string; end: string };
+  confidence: number;
+  type: "project-continuity" | "relationship-narrative" | "decision-chain" | "operational-recap" | "strategic-evolution";
+}
+
+export interface MemorySearchResult {
+  memory: MemoryNode;
+  relevance: number;
+  matchedTerms: string[];
+  contextSnippet: string;
+}
+
+export interface MemoryGraphNode {
+  id: string;
+  label: string;
+  type: MemoryType | "person" | "project" | "cluster";
+  x: number;
+  y: number;
+  size: number;
+  importance: number;
+  connections: string[];
+}

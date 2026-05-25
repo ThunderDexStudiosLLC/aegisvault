@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import {
   FileText, Clock, FolderKanban, Users, Brain, Activity,
   Shield, TrendingUp, AlertTriangle, Lightbulb, ArrowRight,
-  Calendar, Star, Zap, Radio,
+  Calendar, Star, Zap, Radio, Cpu, GitBranch, Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -13,6 +13,7 @@ import {
   notifications, aiSummaries, meetings, relationships,
 } from "@/data/demo";
 import { useOrb } from "@/contexts/OrbContext";
+import { useMemory } from "@/contexts/MemoryContext";
 
 const stats = [
   { label: "Vault Documents", value: "47", icon: FileText, trend: "+8 this week", color: "text-electric" },
@@ -24,6 +25,9 @@ const stats = [
 export default function VaultDashboard() {
   const [activeTab, setActiveTab] = useState<"briefing" | "activity" | "alerts">("briefing");
   const { setState } = useOrb();
+  const memoryEngine = useMemory();
+  const memoryStats = memoryEngine.getStats();
+  const pinnedMemories = memoryEngine.getPinnedMemories().slice(0, 3);
   const executiveBriefing = aiSummaries.find((s) => s.type === "executive");
   const criticalDecisions = decisions.filter((d) => d.impact === "critical" || d.impact === "high");
   const activeProjects = projects.filter((p) => p.status === "active");
@@ -287,6 +291,40 @@ export default function VaultDashboard() {
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Memory Engine Status */}
+          <div className="aegis-card p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                <Cpu className="h-4 w-4 text-electric/70" />
+                Memory Engine
+              </h3>
+              <Link href="/memory" className="text-xs text-electric/60 hover:text-electric-glow transition-colors">Open Engine</Link>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-foreground">{memoryStats.total}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">MEMORIES</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-foreground">{memoryStats.linkCount}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">LINKS</p>
+              </div>
+              <div className="rounded-lg bg-white/[0.02] p-2 text-center">
+                <p className="text-lg font-bold text-foreground">{memoryStats.clusterCount}</p>
+                <p className="text-[9px] font-mono text-muted-foreground/40">CLUSTERS</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {pinnedMemories.map((m) => (
+                <Link key={m.id} href="/memory" className="flex items-center gap-2 rounded-lg p-2 hover:bg-white/[0.03] transition-colors">
+                  <Sparkles className="h-3 w-3 text-warning/50 shrink-0" />
+                  <span className="text-xs text-foreground/70 truncate flex-1">{m.title}</span>
+                  <span className="text-[9px] font-mono text-electric/40">{Math.round(m.importance * 100)}%</span>
+                </Link>
               ))}
             </div>
           </div>
